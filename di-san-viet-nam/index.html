@@ -161,6 +161,10 @@ figure.ph figcaption{font-size:10px;line-height:1.5;color:var(--dim);padding:5px
  .modal{padding:0;align-items:flex-end}.sheet{max-height:92vh}.mhead{padding:16px 16px 8px}.tabs{padding:0 12px}.mbody>*{margin-left:16px;margin-right:16px}.mtl{grid-template-columns:78px 1fr;margin-left:22px!important}.ml{grid-template-columns:1fr auto}.ml small{grid-column:1/-1}
  .qbox{padding:16px}.atools{position:static;justify-content:flex-end;margin-bottom:4px}}
 @media(prefers-reduced-motion:reduce){.rvb,.rvb i,#pop,#pop.on{transition:none!important}.card,.card .ph,.card .ph img,.qbar i,.aic{transition:none}.card:hover{transform:none}.card:hover .ph img{transform:none}}
+.panel .ph{margin:14px 0 0}
+.rvb{padding:15px 18px;border-radius:12px;font:700 14px "Be Vietnam Pro",sans-serif;letter-spacing:.1em;border:1.5px solid var(--gold);background:var(--glass2);box-shadow:0 2px 10px rgba(0,0,0,.08)}
+.rvb:hover{background:var(--gold);color:#fff}
+.rvb i{font-size:15px}
 </style></head><body>
 <div id="scene"></div>
 <header><div class="brand"><div class="seal">遺</div><span>Di sản Việt Nam · 3D</span></div>
@@ -169,9 +173,9 @@ figure.ph figcaption{font-size:10px;line-height:1.5;color:var(--dim);padding:5px
 <div id="hud"><button class="btn ghost" id="back" type="button">← Địa điểm</button>
 <div class="sitebox" id="sbox"><div class="eyebrow" id="sEye"></div><h1 id="sName"></h1><div class="prog" id="sProg"></div><p id="sDesc"></p><div class="sacts"><button class="btn" id="bInfo" type="button">Nội dung</button><button class="btn ghost" id="bMore" type="button">Xem thêm</button></div><button class="more" id="sMore" type="button" aria-expanded="false">Liên quan ▾</button><div class="tags" id="sTags"></div><div class="snav" id="sNav"></div></div>
 <div id="pins"></div>
-<div class="panel hide" id="panel"><button class="x" id="pX" type="button" aria-label="Đóng thông tin">×</button><div id="pPh"></div><small id="pK"></small><h2 id="pT"></h2><div class="tags" id="pY"></div><p id="pP"></p><dl class="facts" id="pF"></dl><div id="pL"></div>
+<div class="panel hide" id="panel"><button class="x" id="pX" type="button" aria-label="Đóng thông tin">×</button><small id="pK"></small><h2 id="pT"></h2><div class="tags" id="pY"></div><p id="pP"></p><dl class="facts" id="pF"></dl><div id="pL"></div>
 <div class="acts"><button class="btn ghost sm" id="pPrev" type="button">‹ Trước</button><button class="btn ghost sm" id="pNext" type="button">Sau ›</button></div>
-<div class="acts" id="pA2"><button class="btn ghost sm" id="pInfo" type="button">Nội dung quần thể</button><button class="btn ghost sm" id="pMore" type="button">Xem thêm</button><button class="btn ghost sm" id="pQuiz" type="button">Đố vui</button></div></div>
+<div class="acts" id="pA2"><button class="btn ghost sm" id="pInfo" type="button">Nội dung quần thể</button><button class="btn ghost sm" id="pMore" type="button">Xem thêm</button><button class="btn ghost sm" id="pQuiz" type="button">Đố vui</button></div><div id="pPh"></div></div>
 <div class="bottom" id="spots"></div></div>
 <div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="mTitle"><div class="sheet"><div class="mhead"><div><div class="eyebrow" id="mEye"></div><h2 id="mTitle"></h2></div><button class="mx" id="mX" type="button" aria-label="Đóng">×</button></div>
 <div class="tabs" role="tablist"><button type="button" role="tab" id="tabN" data-t="n" aria-selected="true">Nội dung</button><button type="button" role="tab" id="tabM" data-t="m" aria-selected="false">Xem thêm</button></div><div class="mbody" id="mBody" tabindex="0"></div></div></div>
@@ -1098,11 +1102,8 @@ function closePop(){const p=$('pop');p.classList.remove('on');if(popBtn){popBtn.
 function openPop(btn){const fig=btn.closest('.rv'),src=fig.querySelector('.rvi'),p=$('pop');if(!src)return;
  p.innerHTML=src.innerHTML;closePop();popBtn=btn;fig.classList.add('open');btn.setAttribute('aria-expanded','true');
  const box=(btn.closest('.panel')||btn.closest('.sheet')||fig).getBoundingClientRect(),W=innerWidth,H=innerHeight,fw=fig.getBoundingClientRect().width,gap=14;
- let w=Math.min(fw*2,720),left,origin;const room=side=>side==='r'?W-box.right-gap-12:box.left-gap-12;
- const side=room('r')>=room('l')?'r':'l';
- if(Math.min(w,room(side))>=300&&!btn.closest('.sheet')){w=Math.min(w,room(side));left=side==='r'?box.right+gap:box.left-gap-w;origin=side==='r'?'0% 25%':'100% 25%'}
- else{w=Math.min(900,W*.92,fw*2.2);left=(W-w)/2;origin='50% 0%'}
- const h=w*9/16+34;let top=Math.max(70,Math.min(box.top,H-h-16));if(left===(W-w)/2)top=Math.max(70,(H-h)/2);
+ let w=Math.min(fw*2,720,W-24);const left=W-w-16,origin='100% 0%';
+ const top=W<701?104:70;
  Object.assign(p.style,{width:w+'px',left:Math.max(8,left)+'px',top:top+'px',transformOrigin:origin});
  void p.offsetWidth;p.classList.add('on')}
 /* --- chế độ xem một địa điểm --- */
