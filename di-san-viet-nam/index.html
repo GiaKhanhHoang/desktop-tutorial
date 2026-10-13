@@ -81,8 +81,12 @@ button.tag{cursor:pointer}button.tag:hover{border-color:var(--gold);color:var(--
 .panel{position:absolute;right:4vw;bottom:calc(86px + env(safe-area-inset-bottom,0px));width:min(370px,90vw);padding:20px 22px 22px;background:var(--glass);border:1px solid var(--line);box-shadow:var(--sh);pointer-events:auto;max-height:62vh;overflow:auto;z-index:3}.panel.hide{display:none}
 .panel small{color:var(--gold);letter-spacing:.2em;text-transform:uppercase;font-size:10px;display:block;padding-right:28px}.panel h2{font:400 26px "Noto Serif",serif;margin:10px 0}.panel p{font-size:13px;line-height:1.75;color:var(--soft);margin:0 0 14px}.panel .tags{margin:-2px 0 10px}
 .panel .x{position:absolute;right:8px;top:6px;width:30px;height:30px;background:none;border:0;font-size:22px;line-height:1;cursor:pointer;color:var(--tx);opacity:.7;z-index:2}.panel .x:hover{opacity:1;color:var(--gold)}
-.panel .ph{margin:0 0 14px;border-radius:12px;overflow:hidden;border:1px solid var(--line)}
-figure.ph{margin:0;position:relative;background:var(--field);border-radius:12px;overflow:hidden}figure.ph img{display:block;width:100%;aspect-ratio:16/9;height:auto;object-fit:cover;cursor:zoom-in}
+.panel .ph{margin:18px 0 14px}
+figure.ph{margin:0;position:relative}figure.rv{background:none;border-radius:12px}
+.rvb{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;padding:10px 14px;background:var(--glass2);border:1px solid var(--line);border-radius:12px;color:var(--gold);font:600 11px "Be Vietnam Pro",sans-serif;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;transition:background .2s,border-color .2s,transform .25s cubic-bezier(.34,1.56,.64,1)}.rvb:hover{border-color:var(--gold);transform:translateY(-1px)}.rvb:active{transform:scale(.97)}.rvb i{font-style:normal;transition:transform .5s cubic-bezier(.34,1.56,.64,1)}.rv.open .rvb i{transform:rotate(180deg)}
+.rvw{display:grid;grid-template-rows:0fr;transition:grid-template-rows .5s cubic-bezier(.22,1,.36,1)}.rv.open .rvw{grid-template-rows:1fr}.rvi{overflow:hidden;min-height:0;border-radius:12px;margin-top:0;transition:margin-top .5s cubic-bezier(.22,1,.36,1)}.rv.open .rvi{margin-top:8px;border:1px solid var(--line)}
+.rvi img{opacity:0;transform:scale(.82) translateY(-14px);transform-origin:50% 0;transition:opacity .35s ease,transform .7s cubic-bezier(.34,1.56,.64,1)}.rv.open .rvi img{opacity:1;transform:none;transition-delay:.08s}
+figure.ph img{display:block;width:100%;aspect-ratio:16/9;height:auto;object-fit:cover;cursor:zoom-in}
 figure.ph figcaption{font-size:10px;line-height:1.5;color:var(--dim);padding:5px 12px;background:var(--glass2)}figure.ph figcaption a{color:var(--dim)}figure.ph figcaption a:hover{color:var(--gold)}
 .acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
 #hud.spot .sitebox{display:none}
@@ -154,7 +158,7 @@ figure.ph figcaption{font-size:10px;line-height:1.5;color:var(--dim);padding:5px
 @media(max-width:700px){#view{padding-top:calc(116px + env(safe-area-inset-top,0px))}#back{top:calc(76px + env(safe-area-inset-top,0px))}.sitebox{top:calc(114px + env(safe-area-inset-top,0px));padding:10px 12px 2px}.sitebox h1{font-size:24px;margin-bottom:6px}.sitebox .more{display:block}.sitebox:not(.open) .tags,.sitebox:not(.open) .snav{display:none}.brand span{display:none}nav button{font-size:11px;padding:6px 8px}.x-lg{display:none}.panel{left:4vw;right:4vw;width:auto;bottom:calc(72px + env(safe-area-inset-bottom,0px));max-height:44vh}.panel .ph{margin:0 0 12px}#tip{display:none!important}.sitebox p{display:none}.mrow{grid-template-columns:1fr}.mrow.sp{padding-left:14px}.mrow .st{display:none}.mhd{display:none}.mrow3{grid-template-columns:1fr}.mrow3.sp>span:first-child{padding-left:0}
  .modal{padding:0;align-items:flex-end}.sheet{max-height:92vh}.mhead{padding:16px 16px 8px}.tabs{padding:0 12px}.mbody>*{margin-left:16px;margin-right:16px}.mtl{grid-template-columns:78px 1fr;margin-left:22px!important}.ml{grid-template-columns:1fr auto}.ml small{grid-column:1/-1}
  .qbox{padding:16px}.atools{position:static;justify-content:flex-end;margin-bottom:4px}}
-@media(prefers-reduced-motion:reduce){.card,.card .ph,.card .ph img,.qbar i,.aic{transition:none}.card:hover{transform:none}.card:hover .ph img{transform:none}}
+@media(prefers-reduced-motion:reduce){.rvw,.rvi,.rvi img,.rvb,.rvb i{transition:none!important}.card,.card .ph,.card .ph img,.qbar i,.aic{transition:none}.card:hover{transform:none}.card:hover .ph img{transform:none}}
 </style></head><body>
 <div id="scene"></div>
 <header><div class="brand"><div class="seal">遺</div><span>Di sản Việt Nam · 3D</span></div>
@@ -1060,7 +1064,7 @@ function figHTML(im,alt){const u=safeImg(im.u);if(!u)return'';
  let cap;if(im.direct)cap='Ảnh: do người biên soạn cung cấp';
  else if(im.auto)cap=`Ảnh: ${esc(im.cr||'Wikimedia Commons')} · Wikimedia Commons`+(im.page?` · <a href="${esc(im.page)}" target="_blank" rel="noopener noreferrer">nguồn &amp; giấy phép</a>`:'')+' · ảnh tự tìm theo tên, có thể chưa khớp';
  else cap='Ảnh: Wikipedia / Wikimedia Commons'+(im.f?` · <a href="${esc('https://'+(im.l||'vi')+'.wikipedia.org/wiki/File:'+encodeURIComponent(im.f))}" target="_blank" rel="noopener noreferrer">nguồn &amp; giấy phép</a>`:'');
- return `<figure class="ph"${im.direct?' data-direct="1"':''}><img src="${esc(u)}" alt="${esc(alt)}" decoding="async" referrerpolicy="no-referrer"><figcaption>${cap}</figcaption></figure>`}
+ return `<figure class="ph rv"${im.direct?' data-direct="1"':''}><button type="button" class="rvb" aria-expanded="false"><span>Hình ảnh thực tế</span><i aria-hidden="true">▾</i></button><div class="rvw"><div class="rvi"><img src="${esc(u)}" alt="${esc(alt)}" decoding="async" referrerpolicy="no-referrer"><figcaption>${cap}</figcaption></div></div></figure>`}
 const photoHTML=(o,key,alt)=>{const im=imgOf(o,key);return im?figHTML(im,alt):''};
 function repaintPhotos(){if(view==='site')paintPanel();if(modalOpen)renderModal(true);if(view==='places')paintCards()}
 /* ===== HỘP THOẠI "NỘI DUNG" / "XEM THÊM" ===== */
@@ -1266,7 +1270,8 @@ $('modal').onclick=e=>{if(e.target===$('modal')){closeModal();return}
  const q=e.target.closest('[data-qm]');if(q){const k=q.dataset.qm;closeModal(true);show('quiz');quizMode(k)}};
 document.querySelectorAll('.tabs [role=tab]').forEach(b=>b.onclick=()=>{modalTab=b.dataset.t;renderModal();$('mBody').scrollTop=0});
 $('lbX').onclick=()=>{$('lb').hidden=true};$('lb').onclick=e=>{if(e.target===$('lb'))$('lb').hidden=true};
-document.addEventListener('click',e=>{const im=e.target.closest&&e.target.closest('figure.ph img');if(im)openLb(im)});
+document.addEventListener('click',e=>{const rb=e.target.closest&&e.target.closest('.rvb');if(rb){const f=rb.closest('.rv'),o=f.classList.toggle('open');rb.setAttribute('aria-expanded',o);return}
+ const im=e.target.closest&&e.target.closest('figure.ph img');if(im)openLb(im)});
 document.addEventListener('error',e=>{const t=e.target;if(t&&t.tagName==='IMG'&&t.closest&&t.closest('figure.ph'))t.closest('figure.ph').remove()},true);
 addEventListener('keydown',e=>{
  const cp=$('cpBox');if(cp&&!cp.hidden){if(e.key==='Escape'){cp.hidden=true;e.preventDefault()}else if(e.key==='Tab')trapTab(e,cp);return}
