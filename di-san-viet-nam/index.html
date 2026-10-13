@@ -84,8 +84,10 @@ button.tag{cursor:pointer}button.tag:hover{border-color:var(--gold);color:var(--
 .panel .ph{margin:18px 0 14px}
 figure.ph{margin:0;position:relative}figure.rv{background:none;border-radius:12px}
 .rvb{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;padding:10px 14px;background:var(--glass2);border:1px solid var(--line);border-radius:12px;color:var(--gold);font:600 11px "Be Vietnam Pro",sans-serif;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;transition:background .2s,border-color .2s,transform .25s cubic-bezier(.34,1.56,.64,1)}.rvb:hover{border-color:var(--gold);transform:translateY(-1px)}.rvb:active{transform:scale(.97)}.rvb i{font-style:normal;transition:transform .5s cubic-bezier(.34,1.56,.64,1)}.rv.open .rvb i{transform:rotate(180deg)}
-.rvw{display:grid;grid-template-rows:0fr;transition:grid-template-rows .5s cubic-bezier(.22,1,.36,1)}.rv.open .rvw{grid-template-rows:1fr}.rvi{overflow:hidden;min-height:0;border-radius:12px;margin-top:0;transition:margin-top .5s cubic-bezier(.22,1,.36,1)}.rv.open .rvi{margin-top:8px;border:1px solid var(--line)}
-.rvi img{opacity:0;transform:scale(.82) translateY(-14px);transform-origin:50% 0;transition:opacity .35s ease,transform .7s cubic-bezier(.34,1.56,.64,1)}.rv.open .rvi img{opacity:1;transform:none;transition-delay:.08s}
+.rvw{display:none}
+#pop{position:fixed;z-index:10;border-radius:14px;overflow:hidden;background:var(--glass);border:1px solid var(--gold);box-shadow:0 18px 50px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:scale(.35) rotate(-3deg);transition:opacity .25s ease,transform .7s cubic-bezier(.34,1.56,.64,1),visibility 0s .7s;cursor:zoom-out}
+#pop.on{opacity:1;visibility:visible;transform:none;transition:opacity .25s ease,transform .7s cubic-bezier(.34,1.56,.64,1)}
+#pop img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}#pop figcaption{font-size:11px;line-height:1.5;color:var(--dim);padding:7px 12px}#pop figcaption a{color:var(--dim)}
 figure.ph img{display:block;width:100%;aspect-ratio:16/9;height:auto;object-fit:cover;cursor:zoom-in}
 figure.ph figcaption{font-size:10px;line-height:1.5;color:var(--dim);padding:5px 12px;background:var(--glass2)}figure.ph figcaption a{color:var(--dim)}figure.ph figcaption a:hover{color:var(--gold)}
 .acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
@@ -158,7 +160,7 @@ figure.ph figcaption{font-size:10px;line-height:1.5;color:var(--dim);padding:5px
 @media(max-width:700px){#view{padding-top:calc(116px + env(safe-area-inset-top,0px))}#back{top:calc(76px + env(safe-area-inset-top,0px))}.sitebox{top:calc(114px + env(safe-area-inset-top,0px));padding:10px 12px 2px}.sitebox h1{font-size:24px;margin-bottom:6px}.sitebox .more{display:block}.sitebox:not(.open) .tags,.sitebox:not(.open) .snav{display:none}.brand span{display:none}nav button{font-size:11px;padding:6px 8px}.x-lg{display:none}.panel{left:4vw;right:4vw;width:auto;bottom:calc(72px + env(safe-area-inset-bottom,0px));max-height:44vh}.panel .ph{margin:0 0 12px}#tip{display:none!important}.sitebox p{display:none}.mrow{grid-template-columns:1fr}.mrow.sp{padding-left:14px}.mrow .st{display:none}.mhd{display:none}.mrow3{grid-template-columns:1fr}.mrow3.sp>span:first-child{padding-left:0}
  .modal{padding:0;align-items:flex-end}.sheet{max-height:92vh}.mhead{padding:16px 16px 8px}.tabs{padding:0 12px}.mbody>*{margin-left:16px;margin-right:16px}.mtl{grid-template-columns:78px 1fr;margin-left:22px!important}.ml{grid-template-columns:1fr auto}.ml small{grid-column:1/-1}
  .qbox{padding:16px}.atools{position:static;justify-content:flex-end;margin-bottom:4px}}
-@media(prefers-reduced-motion:reduce){.rvw,.rvi,.rvi img,.rvb,.rvb i{transition:none!important}.card,.card .ph,.card .ph img,.qbar i,.aic{transition:none}.card:hover{transform:none}.card:hover .ph img{transform:none}}
+@media(prefers-reduced-motion:reduce){.rvb,.rvb i,#pop,#pop.on{transition:none!important}.card,.card .ph,.card .ph img,.qbar i,.aic{transition:none}.card:hover{transform:none}.card:hover .ph img{transform:none}}
 </style></head><body>
 <div id="scene"></div>
 <header><div class="brand"><div class="seal">遺</div><span>Di sản Việt Nam · 3D</span></div>
@@ -173,6 +175,7 @@ figure.ph figcaption{font-size:10px;line-height:1.5;color:var(--dim);padding:5px
 <div class="bottom" id="spots"></div></div>
 <div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="mTitle"><div class="sheet"><div class="mhead"><div><div class="eyebrow" id="mEye"></div><h2 id="mTitle"></h2></div><button class="mx" id="mX" type="button" aria-label="Đóng">×</button></div>
 <div class="tabs" role="tablist"><button type="button" role="tab" id="tabN" data-t="n" aria-selected="true">Nội dung</button><button type="button" role="tab" id="tabM" data-t="m" aria-selected="false">Xem thêm</button></div><div class="mbody" id="mBody" tabindex="0"></div></div></div>
+<div id="pop" role="dialog" aria-label="Hình ảnh thực tế"></div>
 <div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Ảnh phóng to"><button class="mx" id="lbX" type="button" aria-label="Đóng ảnh">×</button><img id="lbImg" alt=""><p id="lbCap"></p></div>
 <div id="tip">KÉO ĐỂ XOAY · CUỘN HOẶC CHỤM ĐỂ ZOOM</div><div id="msg" role="status"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -880,7 +883,7 @@ function tourWait(p){clearTimeout(tour.t);tour.t=setTimeout(tourNext,Math.max(70
 function startTour(){if(!sel)return;tour.on=true;const b=$('tourBtn');b.classList.add('on');b.textContent='■ DỪNG';spot(0,true)}
 /* ===== GIAO DIỆN CÁC TRANG ===== */
 const typeTag=s=>`<span class="tag" style="--c:${TYPES[s.type].c}"><i></i>${esc(TYPES[s.type].n)}</span>`;
-function setView(v){view=v;stopTour();closeModal(true);if(v!=='about')aEdit=false;
+function setView(v){view=v;stopTour();closePop();closeModal(true);if(v!=='about')aEdit=false;
  document.querySelectorAll('nav button[data-v]').forEach(b=>{const on=b.dataset.v===v;b.classList.toggle('on',on);if(on){const n=b.parentNode;n.scrollLeft=b.offsetLeft-(n.clientWidth-b.offsetWidth)/2}});
  $('hud').classList.remove('on');$('view').classList.remove('hide');$('view').scrollTop=0;
  if(HAS3D){if(!curBuild)load(byId['thang-long']);auto=true;go([0,3,0,70,cs.th,1.1])}
@@ -1082,10 +1085,24 @@ function renderModal(keep){const s=modalSite,b=$('mBody'),top=keep?b.scrollTop:0
 function openModal(s,tab){modalSite=s;modalTab=tab||'n';modalOpener=document.activeElement;markSeen(s.id);refreshSeen();
  $('mEye').textContent=s.city+' · '+s.year;$('mTitle').textContent=s.name;$('modal').hidden=false;modalOpen=true;renderModal();$('mX').focus();
  ensureImages(s).then(ch=>{if(ch&&modalOpen&&modalSite===s)renderModal(true)})}
-function closeModal(quiet){if(!modalOpen)return;modalOpen=false;$('modal').hidden=true;if(!quiet&&modalOpener&&modalOpener.focus&&document.contains(modalOpener))try{modalOpener.focus()}catch(e){}}
+function closeModal(quiet){closePop();if(!modalOpen)return;modalOpen=false;$('modal').hidden=true;if(!quiet&&modalOpener&&modalOpener.focus&&document.contains(modalOpener))try{modalOpener.focus()}catch(e){}}
 function trapTab(e,box){const f=[...box.querySelectorAll('button:not([disabled]),a[href],input,textarea,[tabindex]:not([tabindex="-1"])')].filter(x=>x.offsetParent!==null||x===document.activeElement);if(!f.length)return;
  const a=f[0],z=f[f.length-1];if(e.shiftKey&&document.activeElement===a){e.preventDefault();z.focus()}else if(!e.shiftKey&&document.activeElement===z){e.preventDefault();a.focus()}}
 function openLb(img){$('lbImg').src=img.src;$('lbImg').alt=img.alt;const c=img.parentElement.querySelector('figcaption');$('lbCap').innerHTML=c?c.innerHTML:'';$('lb').hidden=false;$('lbX').focus()}
+
+/* ảnh "nhảy ra" khỏi khung nội dung: hiện ở bên cạnh khung, to gấp đôi ảnh trong khung */
+let popBtn=null;
+function closePop(){const p=$('pop');p.classList.remove('on');if(popBtn){popBtn.closest('.rv')&&popBtn.closest('.rv').classList.remove('open');popBtn.setAttribute('aria-expanded','false');popBtn=null}}
+function openPop(btn){const fig=btn.closest('.rv'),src=fig.querySelector('.rvi'),p=$('pop');if(!src)return;
+ p.innerHTML=src.innerHTML;closePop();popBtn=btn;fig.classList.add('open');btn.setAttribute('aria-expanded','true');
+ const box=(btn.closest('.panel')||btn.closest('.sheet')||fig).getBoundingClientRect(),W=innerWidth,H=innerHeight,fw=fig.getBoundingClientRect().width,gap=14;
+ let w=Math.min(fw*2,720),left,origin;const room=side=>side==='r'?W-box.right-gap-12:box.left-gap-12;
+ const side=room('r')>=room('l')?'r':'l';
+ if(Math.min(w,room(side))>=300&&!btn.closest('.sheet')){w=Math.min(w,room(side));left=side==='r'?box.right+gap:box.left-gap-w;origin=side==='r'?'0% 25%':'100% 25%'}
+ else{w=Math.min(900,W*.92,fw*2.2);left=(W-w)/2;origin='50% 0%'}
+ const h=w*9/16+34;let top=Math.max(70,Math.min(box.top,H-h-16));if(left===(W-w)/2)top=Math.max(70,(H-h)/2);
+ Object.assign(p.style,{width:w+'px',left:Math.max(8,left)+'px',top:top+'px',transformOrigin:origin});
+ void p.offsetWidth;p.classList.add('on')}
 /* --- chế độ xem một địa điểm --- */
 const pinList=[],pinPos=[];
 function openSite(s,j=-1){if(view!=='site')from=view;view='site';sel=s;spotIdx=-1;stopTour();closeModal(true);
@@ -1117,7 +1134,7 @@ function syncHud(){$('hud').classList.toggle('spot',spotIdx>=0&&!$('panel').clas
 function facts(){const s=sel,p=spotIdx>=0?s.spots[spotIdx]:null,r=[];
  if(p){r.push(['Thuộc',s.name]);r.push(['Vị trí',s.city]);r.push(['Thời kỳ',s.era.n+' ('+s.era.r+')']);if(s.unesco)r.push(['Danh hiệu',s.unesco]);r.push(['Tiến độ','Đã xem '+seenCount(s)+'/'+s.spots.length+' điểm của quần thể'])}
  $('pF').innerHTML=r.map(([a,b])=>`<dt>${esc(a)}</dt><dd>${esc(b)}</dd>`).join('');$('pA2').hidden=!p}
-function panel(k,t,p,o,key,y){$('pK').textContent=k;$('pT').textContent=t;$('pP').textContent=p;$('pY').innerHTML=y?`<span class="tag">${esc(y)}</span>`:'';$('pY').style.display=y?'':'none';linkBox(o,key,$('pL'));curPanel={o,key,t};paintPanel();$('panel').classList.remove('hide');$('panel').scrollTop=0;facts();syncHud()}
+function panel(k,t,p,o,key,y){closePop();$('pK').textContent=k;$('pT').textContent=t;$('pP').textContent=p;$('pY').innerHTML=y?`<span class="tag">${esc(y)}</span>`:'';$('pY').style.display=y?'':'none';linkBox(o,key,$('pL'));curPanel={o,key,t};paintPanel();$('panel').classList.remove('hide');$('panel').scrollTop=0;facts();syncHud()}
 function info(){spotIdx=-1;auto=true;go(sel.cam);panel('Địa danh · '+sel.year,sel.name,sel.text,sel,sel.id);mark(-1);setHash(sel.id,true)}
 function spot(j,keep){const p=sel.spots[j];if(!p)return;if(!keep)stopTour();spotIdx=j;auto=false;markSeen(p.k);go([p.pos[0],p.pos[1],p.pos[2],p.r,p.th,p.ph]);
  panel('ĐIỂM '+String(j+1).padStart(2,'0')+' / '+String(sel.spots.length).padStart(2,'0')+' · '+sel.name,p.n,p.t,p,p.k,p.y);mark(j);refreshSeen();facts();setHash(sel.id+'.'+j,true);
@@ -1270,10 +1287,13 @@ $('modal').onclick=e=>{if(e.target===$('modal')){closeModal();return}
  const q=e.target.closest('[data-qm]');if(q){const k=q.dataset.qm;closeModal(true);show('quiz');quizMode(k)}};
 document.querySelectorAll('.tabs [role=tab]').forEach(b=>b.onclick=()=>{modalTab=b.dataset.t;renderModal();$('mBody').scrollTop=0});
 $('lbX').onclick=()=>{$('lb').hidden=true};$('lb').onclick=e=>{if(e.target===$('lb'))$('lb').hidden=true};
-document.addEventListener('click',e=>{const rb=e.target.closest&&e.target.closest('.rvb');if(rb){const f=rb.closest('.rv'),o=f.classList.toggle('open');rb.setAttribute('aria-expanded',o);return}
+document.addEventListener('click',e=>{const rb=e.target.closest&&e.target.closest('.rvb');if(rb){if(popBtn===rb)closePop();else openPop(rb);return}
+ if(e.target.closest&&e.target.closest('#pop')){closePop();return}
+ if(popBtn&&!(e.target.closest&&e.target.closest('.rv')))closePop();
  const im=e.target.closest&&e.target.closest('figure.ph img');if(im)openLb(im)});
 document.addEventListener('error',e=>{const t=e.target;if(t&&t.tagName==='IMG'&&t.closest&&t.closest('figure.ph'))t.closest('figure.ph').remove()},true);
 addEventListener('keydown',e=>{
+ if(e.key==='Escape'&&popBtn){closePop();e.preventDefault();return}
  const cp=$('cpBox');if(cp&&!cp.hidden){if(e.key==='Escape'){cp.hidden=true;e.preventDefault()}else if(e.key==='Tab')trapTab(e,cp);return}
  if(!$('lb').hidden){if(e.key==='Escape'){$('lb').hidden=true;e.preventDefault()}else if(e.key==='Tab'){trapTab(e,$('lb'))}return}
  if(modalOpen){if(e.key==='Escape'){closeModal();e.preventDefault()}else if(e.key==='Tab')trapTab(e,$('modal'));return}
