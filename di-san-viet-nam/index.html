@@ -64,6 +64,8 @@ button.tag{cursor:pointer}button.tag:hover{border-color:var(--gold);color:var(--
 .mrow{display:grid;grid-template-columns:minmax(120px,220px) minmax(0,1fr) 78px;gap:10px;align-items:center;padding:7px 14px;border-bottom:1px solid var(--line2);font-size:12.5px}.mrow.sp{padding-left:28px;color:var(--soft)}
 .mrow input{width:100%;min-width:0;background:var(--field);border:1px solid var(--line2);color:var(--tx);padding:6px 8px;font:12px "Be Vietnam Pro",sans-serif}.mrow .st{font-size:10.5px;color:var(--dim)}.mrow .st.on{color:var(--gold)}
 .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.mgrcols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 28px;align-items:start}.mgrcols .mgr{max-width:none}.mgrcols h2.sec{font-size:22px}.mrow .st.bad{color:var(--bad);font-weight:600}.mgrcols .mrow{grid-template-columns:minmax(90px,150px) minmax(0,1fr) 92px}
+@media(max-width:980px){.mgrcols{grid-template-columns:1fr}}
 /* ---- khung tham quan 3D ---- */
 #hud{position:fixed;inset:0;z-index:4;pointer-events:none;display:none}#hud.on{display:block}
 #back{position:absolute;left:4vw;top:calc(84px + env(safe-area-inset-top,0px));pointer-events:auto}
@@ -942,7 +944,7 @@ function renderTech(){
  <h2 class="sec" style="margin-top:8px">Đã có trong bản này</h2><ul class="tech">${done.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
  <h2 class="sec">Hướng nâng cấp</h2><ul class="tech">${todo.map(x=>`<li>${x}</li>`).join('')}
  <li style="color:var(--dim)">Lưu ý: các mô hình trong trang này là minh họa đơn giản, không thay thế tư liệu khoa học chính thức. Thông tin tóm tắt từ nguồn công khai; hãy đối chiếu trước khi dùng cho mục đích học thuật.</li></ul>
- ${EDIT?mgrHTML()+imgMgrHTML():''}</div>`;
+ ${EDIT?`<div class="mgrcols"><div>${mgrHTML()}</div><div>${imgMgrHTML()}</div></div>`:''}</div>`;
  if(EDIT){mgrBind();imgMgrBind()}}
 /* --- quản lý liên kết --- */
 function mgrHTML(){const rows=[];
@@ -974,7 +976,8 @@ function imgMgrHTML(){const rows=[];
   rows.push(r(s.id,'Ảnh giới thiệu chung'));s.spots.forEach((p,j)=>rows.push(r(s.id+'.'+j,(j+1)+'. '+p.n)))}
  return `<h2 class="sec">Quản lý ảnh (dành cho người biên soạn)</h2><div class="guide"><p>Dán địa chỉ ảnh (đường dẫn trực tiếp tới file .jpg, .png, .webp…) cho từng địa danh hoặc di tích nhỏ. Có ảnh thì ảnh hiện phía trên phần thông tin, bo viền; để trống thì không hiện gì (hoặc dùng ảnh tự tìm từ Wikipedia). Ảnh được lưu trên trình duyệt này; để giữ cố định, bấm <b>Sao chép khối IMGS</b> rồi dán thay cho khối <code>const IMGS={…}</code> ở đầu file.</p></div>
  <div class="mgr" id="mgrI">${rows.join('')}</div><div class="row"><button class="btn" type="button" id="iCopy">Sao chép khối IMGS</button><button class="btn ghost" type="button" id="iClear">Xóa ảnh đã nhập trên trình duyệt này</button></div>`}
-function imgMgrBind(){const stat=k=>{const e=document.querySelector(`[data-ist="${k}"]`);if(e){const t=imgStore[k]?'đã nhập':IMGS[k]?'có sẵn':'trống';e.textContent=t;e.className='st'+(t==='đã nhập'?' on':'')}};
+function imgMgrBind(){const stat=k=>{const e=document.querySelector(`[data-ist="${k}"]`);if(!e)return;const u=safeUrl(imgStore[k]||IMGS[k]||'');const t=imgStore[k]?'đã nhập':IMGS[k]?'có sẵn':'trống';e.textContent=t;e.className='st'+(t==='đã nhập'?' on':'');
+  if(u){const im=new Image();im.referrerPolicy='no-referrer';im.onload=()=>{if(e.isConnected){e.textContent=t+' · ảnh OK';e.className='st on'}};im.onerror=()=>{if(e.isConnected){e.textContent='không tải được ảnh';e.className='st bad';e.title='Link không phải ảnh trực tiếp, hoặc trang chứa ảnh chặn nhúng sang web khác'}};im.src=u}};
  document.querySelectorAll('#mgrI input').forEach(i=>{const k=i.dataset.ikey;stat(k);
   i.onchange=()=>{const v=i.value.trim();if(!v)delete imgStore[k];else{const u=safeUrl(/^https?:\/\//i.test(v)?v:'https://'+v);if(!u){toast('Link ảnh không hợp lệ: '+v);i.value=imgStore[k]||IMGS[k]||'';return}imgStore[k]=u}persistImgs();i.value=imgStore[k]||IMGS[k]||'';stat(k)}});
  $('iCopy').onclick=()=>{const all=Object.assign({},IMGS,imgStore);copyText('const IMGS={\n'+Object.keys(all).filter(k=>all[k]).map(k=>` ${JSON.stringify(k)}:${JSON.stringify(all[k])},`).join('\n')+'\n};','Đã sao chép khối IMGS')};
@@ -1247,7 +1250,7 @@ $('modal').onclick=e=>{if(e.target===$('modal')){closeModal();return}
 document.querySelectorAll('.tabs [role=tab]').forEach(b=>b.onclick=()=>{modalTab=b.dataset.t;renderModal();$('mBody').scrollTop=0});
 $('lbX').onclick=()=>{$('lb').hidden=true};$('lb').onclick=e=>{if(e.target===$('lb'))$('lb').hidden=true};
 document.addEventListener('click',e=>{const im=e.target.closest&&e.target.closest('figure.ph img');if(im)openLb(im)});
-document.addEventListener('error',e=>{const t=e.target;if(t&&t.tagName==='IMG'&&t.closest&&t.closest('figure.ph')){const f=t.closest('figure.ph');if(f.dataset.direct){f.innerHTML='<figcaption style="padding:10px 12px">Không tải được ảnh từ link đã nhập. Hãy dùng link trực tiếp tới file ảnh (.jpg/.png), mở được công khai; một số trang báo chặn nhúng ảnh sang trang khác.</figcaption>'}else f.remove()}},true);
+document.addEventListener('error',e=>{const t=e.target;if(t&&t.tagName==='IMG'&&t.closest&&t.closest('figure.ph'))t.closest('figure.ph').remove()},true);
 addEventListener('keydown',e=>{
  const cp=$('cpBox');if(cp&&!cp.hidden){if(e.key==='Escape'){cp.hidden=true;e.preventDefault()}else if(e.key==='Tab')trapTab(e,cp);return}
  if(!$('lb').hidden){if(e.key==='Escape'){$('lb').hidden=true;e.preventDefault()}else if(e.key==='Tab'){trapTab(e,$('lb'))}return}
