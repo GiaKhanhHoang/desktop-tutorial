@@ -83,6 +83,8 @@ button.tag{cursor:pointer}button.tag:hover{border-color:var(--gold);color:var(--
 figure.ph{margin:0;position:relative;background:var(--field)}figure.ph img{display:block;width:100%;max-height:190px;object-fit:cover;cursor:zoom-in}
 figure.ph figcaption{font-size:10px;line-height:1.5;color:var(--dim);padding:5px 12px;background:var(--glass2)}figure.ph figcaption a{color:var(--dim)}figure.ph figcaption a:hover{color:var(--gold)}
 .acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
+#hud.spot .sitebox{display:none}
+.facts{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0 0 14px;padding:12px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-size:12.5px;line-height:1.5}.facts dt{color:var(--dim);font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding-top:2px}.facts dd{margin:0;color:var(--tx)}.facts:empty{display:none}
 .linkrow{display:flex;gap:6px;flex-wrap:wrap}.linkrow input{flex:1;min-width:140px;background:var(--field);border:1px solid var(--line2);color:var(--tx);padding:9px;font:12px "Be Vietnam Pro",sans-serif}
 .btn{border:1px solid var(--gold);padding:9px 14px;background:var(--acc);color:var(--onacc);font:700 11px "Be Vietnam Pro",sans-serif;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;text-decoration:none;display:inline-block}.btn:hover{filter:brightness(1.06)}.btn.ghost{background:var(--glass2);color:var(--tx);border-color:var(--line2)}.btn.ghost:hover,.btn.ghost.on{border-color:var(--gold);color:var(--gold)}.btn.sm{padding:7px 11px;font-size:10.5px}.btn:disabled{opacity:.45;cursor:default}
 .lk{background:none;border:0;color:var(--dim);font-size:11px;cursor:pointer;text-decoration:underline;margin-left:8px}.lk:hover{color:var(--gold)}
@@ -158,8 +160,9 @@ figure.ph figcaption{font-size:10px;line-height:1.5;color:var(--dim);padding:5px
 <div id="hud"><button class="btn ghost" id="back" type="button">← Địa điểm</button>
 <div class="sitebox" id="sbox"><div class="eyebrow" id="sEye"></div><h1 id="sName"></h1><div class="prog" id="sProg"></div><p id="sDesc"></p><div class="sacts"><button class="btn" id="bInfo" type="button">Nội dung</button><button class="btn ghost" id="bMore" type="button">Xem thêm</button></div><button class="more" id="sMore" type="button" aria-expanded="false">Liên quan ▾</button><div class="tags" id="sTags"></div><div class="snav" id="sNav"></div></div>
 <div id="pins"></div>
-<div class="panel hide" id="panel"><button class="x" id="pX" type="button" aria-label="Đóng thông tin">×</button><div id="pPh"></div><small id="pK"></small><h2 id="pT"></h2><div class="tags" id="pY"></div><p id="pP"></p><div id="pL"></div>
-<div class="acts"><button class="btn ghost sm" id="pPrev" type="button">‹ Trước</button><button class="btn ghost sm" id="pNext" type="button">Sau ›</button><button class="btn ghost sm" id="pSay" type="button" aria-pressed="false">Nghe thuyết minh</button></div></div>
+<div class="panel hide" id="panel"><button class="x" id="pX" type="button" aria-label="Đóng thông tin">×</button><div id="pPh"></div><small id="pK"></small><h2 id="pT"></h2><div class="tags" id="pY"></div><p id="pP"></p><dl class="facts" id="pF"></dl><div id="pL"></div>
+<div class="acts"><button class="btn ghost sm" id="pPrev" type="button">‹ Trước</button><button class="btn ghost sm" id="pNext" type="button">Sau ›</button></div>
+<div class="acts" id="pA2"><button class="btn ghost sm" id="pInfo" type="button">Nội dung quần thể</button><button class="btn ghost sm" id="pMore" type="button">Xem thêm</button><button class="btn ghost sm" id="pQuiz" type="button">Đố vui</button></div></div>
 <div class="bottom" id="spots"></div></div>
 <div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="mTitle"><div class="sheet"><div class="mhead"><div><div class="eyebrow" id="mEye"></div><h2 id="mTitle"></h2></div><button class="mx" id="mX" type="button" aria-label="Đóng">×</button></div>
 <div class="tabs" role="tablist"><button type="button" role="tab" id="tabN" data-t="n" aria-selected="true">Nội dung</button><button type="button" role="tab" id="tabM" data-t="m" aria-selected="false">Xem thêm</button></div><div class="mbody" id="mBody" tabindex="0"></div></div></div>
@@ -265,7 +268,7 @@ const SITES=[
  spots:[{n:'Chùa Cầu',t:'Cầu mái ngói bắc qua lạch nước, do cộng đồng thương nhân Nhật góp tiền xây vào khoảng thế kỷ XVII nên còn gọi là cầu Nhật Bản. Cầu được dựng lại năm 1817 và đại trùng tu giai đoạn 2022–2024.',y:'Thế kỷ XVII',pos:[0,1.5,-14],r:24,th:.9,ph:1.28,link:'https://vi.wikipedia.org/wiki/Chùa_Cầu'},
  {n:'Dãy nhà phố cổ',t:'Những ngôi nhà ống gỗ, mái ngói âm dương san sát, vừa để ở vừa buôn bán.',pos:[0,2,6],r:20,th:-.6,ph:1.25,link:''},
  {n:'Hội quán Phúc Kiến',t:'Hội quán của cộng đồng người Hoa, nổi bật với cổng tam quan và mái ngói trang trí cầu kỳ.',pos:[-24,3,26],r:17,th:.35,ph:1.25,link:''},
- {n:'Phố đèn lồng',t:'Hàng nghìn chiếc đèn lồng thắp sáng phố cổ vào đêm rằm (14 âm lịch hằng tháng; từ năm 1998 phố cổ tắt điện và dành cho người đi bộ), trở thành nét riêng của Hội An.',pos:[8,3,3],r:12,th:-.2,ph:1.3,link:''}]},
+ {n:'Phố đèn lồng',t:'Hàng nghìn chiếc đèn lồng thắp sáng phố cổ vào đêm rằm (14 âm lịch hằng tháng; từ năm 1998 phố cổ tắt điện và dành cho người đi bộ), trở thành nét riêng của Hội An.',pos:[8,4,7],r:17,th:-.35,ph:1.05,link:''}]},
 {id:'hue',name:'Quần thể Cố đô Huế',city:'Huế',prov:'Huế',reg:'Trung',type:'thanh',year:'1805',yn:1805,unesco:'Di sản thế giới 1993',ll:[16.4698,107.5786],bg:0xa8b3a5,
  text:'Kinh đô của nhà Nguyễn (1802–1945). Kinh thành Huế được khởi công năm 1805. UNESCO ghi danh năm 1993.',
  link:'https://vi.wikipedia.org/wiki/Quần_thể_di_tích_Cố_đô_Huế',cam:[0,3,0,60,.5,1.1],
@@ -819,7 +822,7 @@ if(HAS3D)try{
  const dist=()=>{const a=[...ptrs.values()];return Math.hypot(a[0][0]-a[1][0],a[0][1]-a[1][1])};
  cv.addEventListener('pointerdown',e=>{try{cv.setPointerCapture(e.pointerId)}catch(_){}ptrs.set(e.pointerId,[e.clientX,e.clientY,e.timeStamp]);auto=false;spin=inertia=0;if(ptrs.size===2)pd=dist()});
  cv.addEventListener('pointermove',e=>{const o=ptrs.get(e.pointerId);if(!o)return;
-  if(ptrs.size===1){const dx=e.clientX-o[0];gs.th-=dx*.006;gs.ph=clamp(gs.ph+(e.clientY-o[1])*.004,.3,1.5);spin=spin*.6-dx*.006/(Math.max(8,e.timeStamp-o[2])/1000)*.4;lastMv=performance.now()}
+  if(ptrs.size===1){const dx=e.clientX-o[0];gs.th-=dx*.006;gs.ph=clamp(gs.ph-(e.clientY-o[1])*.004,.3,1.5);spin=spin*.6-dx*.006/(Math.max(8,e.timeStamp-o[2])/1000)*.4;lastMv=performance.now()}
   ptrs.set(e.pointerId,[e.clientX,e.clientY,e.timeStamp]);
   if(ptrs.size===2){const d=dist();if(pd)gs.r=clamp(gs.r*pd/d,8,125);pd=d}});
  const up=e=>{ptrs.delete(e.pointerId);pd=0;if(!ptrs.size&&!RM&&performance.now()-lastMv<90&&Math.abs(spin)>.15)inertia=clamp(spin,-2.6,2.6)}; /* thả tay khi đang vuốt: tiếp tục xoay rồi chậm dần */cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
@@ -862,19 +865,15 @@ function toast(t){const m=$('msg');m.textContent=t;m.style.display='block';clear
 /* xác nhận hai bước ngay trong trang (confirm() không dùng được trong một số khung xem): bấm lần đầu để được nhắc, bấm lần nữa trong vài giây để thực hiện */
 let armed=null;
 function armOnce(key,msg,run){if(armed&&armed.key===key){clearTimeout(armed.t);armed=null;run();return}if(armed)clearTimeout(armed.t);armed={key,t:setTimeout(()=>{armed=null},4500)};toast(msg)}
-/* ===== GIỌNG ĐỌC & THAM QUAN TỰ ĐỘNG ===== */
-const TTS='speechSynthesis' in window&&'SpeechSynthesisUtterance' in window;
-let voiceOn=false,vTok=0;
-function speak(text,done){if(!TTS)return;const tok=++vTok;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='vi-VN';const v=speechSynthesis.getVoices().find(x=>/^vi/i.test(x.lang));if(v)u.voice=v;else if(!speak.warned){speak.warned=1;toast('Thiết bị chưa có giọng đọc tiếng Việt; âm thanh có thể không phát.')}u.rate=.95;u.onend=u.onerror=()=>{if(tok===vTok&&done)done()};speechSynthesis.speak(u)}catch(e){}}
-function hush(){vTok++;if(TTS)try{speechSynthesis.cancel()}catch(e){}}
+/* ===== THAM QUAN TỰ ĐỘNG ===== */
 const tour={on:false,t:0};
 function stopTour(){tour.on=false;clearTimeout(tour.t);const b=$('tourBtn');if(b){b.classList.remove('on');b.textContent='▶ TỰ ĐỘNG'}}
-function tourNext(){if(!tour.on)return;const j=spotIdx+1;if(j>=sel.spots.length){stopTour();hush();info();return}spot(j,true)}
-function tourWait(p){clearTimeout(tour.t);tour.t=setTimeout(tourNext,voiceOn?Math.max(9000,p.t.length*95):Math.max(7000,p.t.length*55))}
+function tourNext(){if(!tour.on)return;const j=spotIdx+1;if(j>=sel.spots.length){stopTour();info();return}spot(j,true)}
+function tourWait(p){clearTimeout(tour.t);tour.t=setTimeout(tourNext,Math.max(7000,p.t.length*55))}
 function startTour(){if(!sel)return;tour.on=true;const b=$('tourBtn');b.classList.add('on');b.textContent='■ DỪNG';spot(0,true)}
 /* ===== GIAO DIỆN CÁC TRANG ===== */
 const typeTag=s=>`<span class="tag" style="--c:${TYPES[s.type].c}"><i></i>${esc(TYPES[s.type].n)}</span>`;
-function setView(v){view=v;stopTour();hush();closeModal(true);if(v!=='about')aEdit=false;
+function setView(v){view=v;stopTour();closeModal(true);if(v!=='about')aEdit=false;
  document.querySelectorAll('nav button[data-v]').forEach(b=>{const on=b.dataset.v===v;b.classList.toggle('on',on);if(on){const n=b.parentNode;n.scrollLeft=b.offsetLeft-(n.clientWidth-b.offsetWidth)/2}});
  $('hud').classList.remove('on');$('view').classList.remove('hide');$('view').scrollTop=0;
  if(HAS3D){if(!curBuild)load(byId['thang-long']);auto=true;go([0,3,0,70,cs.th,1.1])}
@@ -935,7 +934,7 @@ function renderMap(){
  <div class="mapwrap"><div class="map" id="mapBox"></div><div class="mlist" id="mlist"></div></div></div>`;
  drawMap();mapList()}
 function renderTech(){
- const done=['Mô hình 3D tương tác của 15 địa điểm: xoay – zoom (cả cảm ứng hai ngón), các số gắn trên từng di tích nhỏ bám mượt theo góc nhìn.','Mục “Nội dung” (lịch sử sơ bộ, mốc thời gian) và “Xem thêm” (liên kết Wikipedia, UNESCO, báo chí) cho từng địa điểm.','Ảnh thật của di tích, tự lấy từ Wikipedia / Wikimedia Commons khi có kết nối Internet và luôn kèm nguồn.','Trang “Thử thách”: câu hỏi đố vui dựa trên nội dung đã xem, có giải thích và liên kết quay lại nơi chứa đáp án.','Trang “Ý nghĩa” có thể chỉnh sửa và lưu ngay trên trình duyệt để trình bày về tác dụng, tiềm năng của công nghệ số.','Bản đồ đơn giản của Việt Nam (gom cụm), dòng thời gian theo thời kỳ, giao diện sáng / tối.','Thuyết minh bằng giọng đọc của thiết bị và chế độ tham quan tự động.'];
+ const done=['Mô hình 3D tương tác của 15 địa điểm: xoay – zoom (cả cảm ứng hai ngón), các số gắn trên từng di tích nhỏ bám mượt theo góc nhìn.','Mục “Nội dung” (lịch sử sơ bộ, mốc thời gian) và “Xem thêm” (liên kết Wikipedia, UNESCO, báo chí) cho từng địa điểm.','Ảnh thật của di tích, tự lấy từ Wikipedia / Wikimedia Commons khi có kết nối Internet và luôn kèm nguồn.','Trang “Thử thách”: câu hỏi đố vui dựa trên nội dung đã xem, có giải thích và liên kết quay lại nơi chứa đáp án.','Trang “Ý nghĩa” có thể chỉnh sửa và lưu ngay trên trình duyệt để trình bày về tác dụng, tiềm năng của công nghệ số.','Bản đồ đơn giản của Việt Nam (gom cụm), dòng thời gian theo thời kỳ, giao diện sáng / tối.','Chế độ tham quan tự động đi lần lượt qua từng điểm.'];
  const todo=['<b>AR / VR</b> – đặt lớp phục dựng lên cảnh thật hoặc tham quan nhập vai.','<b>Quét 3D & ảnh độ phân giải cao</b> – lưu hình dạng, hoa văn, hiện trạng hiện vật; thay các mô hình khối đơn giản bằng mô hình thật.','<b>Bản đồ GIS</b> – gắn vị trí với dữ liệu khảo cổ, lớp bản đồ cổ.','<b>Thuyết minh đa ngôn ngữ</b> – giọng đọc thu sẵn, phụ đề, tiếng Anh/Pháp/Trung.','<b>Dữ liệu theo tỉnh, thành</b> – mỗi địa phương một bộ dữ liệu di sản, tổng hợp thành kho dữ liệu chung của cả nước.'];
  $('view').innerHTML=`<div class="wrap"><div class="eyebrow">Công nghệ số</div><h1>Công nghệ <em>kể chuyện</em> di sản</h1>
  <p class="lead">Những công nghệ giúp người xem tiếp cận di tích mà không cần có mặt tại chỗ, và cách trang này áp dụng chúng. Ý nghĩa và tiềm năng chi tiết hơn nằm ở trang <button class="lnk" type="button" data-go="about">Ý nghĩa</button>.</p>
@@ -1049,7 +1048,7 @@ function trapTab(e,box){const f=[...box.querySelectorAll('button:not([disabled])
 function openLb(img){$('lbImg').src=img.src;$('lbImg').alt=img.alt;const c=img.parentElement.querySelector('figcaption');$('lbCap').innerHTML=c?c.innerHTML:'';$('lb').hidden=false;$('lbX').focus()}
 /* --- chế độ xem một địa điểm --- */
 const pinList=[],pinPos=[];
-function openSite(s,j=-1){if(view!=='site')from=view;view='site';sel=s;spotIdx=-1;stopTour();hush();closeModal(true);
+function openSite(s,j=-1){if(view!=='site')from=view;view='site';sel=s;spotIdx=-1;stopTour();closeModal(true);
  document.querySelectorAll('nav button[data-v]').forEach(b=>b.classList.remove('on'));
  $('hud').classList.add('on');$('view').classList.add('hide');markSeen(s.id);
  if(HAS3D){load(s);auto=true;go(s.cam,true)}else toast('Thiết bị không hỗ trợ đồ họa 3D; vẫn xem được thông tin các điểm.');
@@ -1061,7 +1060,7 @@ function openSite(s,j=-1){if(view!=='site')from=view;view='site';sel=s;spotIdx=-
  $('spots').innerHTML=`<button class="loc tour" id="tourBtn" type="button">▶ TỰ ĐỘNG</button>`+s.spots.map((p,i)=>`<button class="loc" type="button" data-j="${i}">${String(i+1).padStart(2,'0')} · ${esc(p.n.toUpperCase())}</button>`).join('')+`<button class="loc" id="siteInfo" type="button">TỔNG QUAN</button>`;
  $('pins').innerHTML='';pinList.length=0;pinPos.length=0;
  s.spots.forEach((p,i)=>{const b=document.createElement('button');b.className='pin';b.type='button';b.textContent=i+1;b.setAttribute('aria-label','Điểm '+(i+1)+': '+p.n);b.title=p.n;b.onclick=()=>spot(i);b.hidden=true;$('pins').appendChild(b);pinList.push(b);pinPos.push(p.mk||[p.pos[0],p.pos[1]+4,p.pos[2]])});
- $('panel').classList.add('hide');curPanel=null;mark(-1);refreshSeen();
+ $('panel').classList.add('hide');curPanel=null;mark(-1);refreshSeen();syncHud();
  ensureImages(s).then(ch=>{if(ch&&sel===s)repaintPhotos()});
  if(j>=0&&s.spots[j])spot(j)}
 function mark(j){document.querySelectorAll('#spots .loc[data-j]').forEach(b=>b.classList.toggle('on',+b.dataset.j===j));pinList.forEach((b,i)=>{b.classList.toggle('on',i===j);b._on=i===j})}
@@ -1069,19 +1068,19 @@ function refreshSeen(){if(!sel)return;const n=seenCount(sel),t=sel.spots.length;
  $('sProg').innerHTML=n?`Đã xem <b>${n}/${t}</b> điểm tham quan${n===t?' · hoàn thành!':''}`:`${t} điểm tham quan · chạm số trên mô hình để bắt đầu`;
  document.querySelectorAll('#spots .loc[data-j]').forEach(b=>b.classList.toggle('seen',!!seen[sel.id+'.'+b.dataset.j]));
  pinList.forEach((b,i)=>b.classList.toggle('seen',!!seen[sel.id+'.'+i]))}
-function linkBox(o,key,host){const u=getLink(o,key);
- const edit=()=>{host.innerHTML=`<div class="linkrow"><input type="url" id="lkIn" placeholder="Dán link trang giới thiệu…" aria-label="Link trang giới thiệu" value="${esc(store[key]||o.link||'')}"><button class="btn" type="button" id="lkSave">Lưu</button></div><div class="note" id="lkNote">Chưa có link. Dán tại đây (lưu trên trình duyệt này), hoặc điền vào <b>link:''</b> trong dữ liệu để lưu cố định.</div>`;
-  const i=$('lkIn');const save=()=>{const v=i.value.trim();if(!v){delete store[key];persist();linkBox(o,key,host);return}const x=safeUrl(/^https?:\/\//i.test(v)?v:'https://'+v);if(!x){$('lkNote').textContent='Link không hợp lệ. Hãy dán địa chỉ bắt đầu bằng https://';return}store[key]=x;persist();linkBox(o,key,host)};
-  $('lkSave').onclick=save;i.onkeydown=e=>{if(e.key==='Enter')save()}};
- if(u){host.innerHTML=`<a class="btn" href="${esc(u)}" target="_blank" rel="noopener noreferrer">Mở trang giới thiệu ↗</a>`+(EDIT?'<button class="lk" type="button">sửa link</button>':'');if(EDIT)host.querySelector('.lk').onclick=edit}
- else if(EDIT)edit();else host.innerHTML=''}
+/* chỉ hiện nút khi địa điểm có link; chưa có link thì không hiện gì (link nhập ở trang Công nghệ số) */
+function linkBox(o,key,host){const u=getLink(o,key);host.innerHTML=u?`<a class="btn" href="${esc(u)}" target="_blank" rel="noopener noreferrer">Mở trang giới thiệu ↗</a>`:''}
 let curPanel=null;
 function paintPanel(){$('pPh').innerHTML=curPanel?photoHTML(curPanel.o,curPanel.key,curPanel.t):''}
-function panel(k,t,p,o,key,y){$('pK').textContent=k;$('pT').textContent=t;$('pP').textContent=p;$('pY').innerHTML=y?`<span class="tag">${esc(y)}</span>`:'';$('pY').style.display=y?'':'none';linkBox(o,key,$('pL'));curPanel={o,key,t};paintPanel();$('panel').classList.remove('hide');$('panel').scrollTop=0}
-function info(){spotIdx=-1;auto=true;go(sel.cam);panel('Địa danh · '+sel.year,sel.name,sel.text,sel,sel.id);mark(-1);setHash(sel.id,true);if(voiceOn)speak(sel.name+'. '+sel.text)}
+function syncHud(){$('hud').classList.toggle('spot',spotIdx>=0&&!$('panel').classList.contains('hide'))}
+/* thông tin nhanh về điểm đang xem (hiện ở khung bên phải) */
+function facts(){const s=sel,p=spotIdx>=0?s.spots[spotIdx]:null,r=[];
+ if(p){r.push(['Thuộc',s.name]);r.push(['Vị trí',s.city]);r.push(['Thời kỳ',s.era.n+' ('+s.era.r+')']);if(s.unesco)r.push(['Danh hiệu',s.unesco]);r.push(['Tiến độ','Đã xem '+seenCount(s)+'/'+s.spots.length+' điểm của quần thể'])}
+ $('pF').innerHTML=r.map(([a,b])=>`<dt>${esc(a)}</dt><dd>${esc(b)}</dd>`).join('');$('pA2').hidden=!p}
+function panel(k,t,p,o,key,y){$('pK').textContent=k;$('pT').textContent=t;$('pP').textContent=p;$('pY').innerHTML=y?`<span class="tag">${esc(y)}</span>`:'';$('pY').style.display=y?'':'none';linkBox(o,key,$('pL'));curPanel={o,key,t};paintPanel();$('panel').classList.remove('hide');$('panel').scrollTop=0;facts();syncHud()}
+function info(){spotIdx=-1;auto=true;go(sel.cam);panel('Địa danh · '+sel.year,sel.name,sel.text,sel,sel.id);mark(-1);setHash(sel.id,true)}
 function spot(j,keep){const p=sel.spots[j];if(!p)return;if(!keep)stopTour();spotIdx=j;auto=false;markSeen(p.k);go([p.pos[0],p.pos[1],p.pos[2],p.r,p.th,p.ph]);
- panel('ĐIỂM '+String(j+1).padStart(2,'0')+' / '+String(sel.spots.length).padStart(2,'0')+' · '+sel.name,p.n,p.t,p,p.k,p.y);mark(j);refreshSeen();setHash(sel.id+'.'+j,true);
- if(voiceOn)speak(p.n+'. '+p.t,()=>{if(tour.on){clearTimeout(tour.t);tour.t=setTimeout(tourNext,1200)}});
+ panel('ĐIỂM '+String(j+1).padStart(2,'0')+' / '+String(sel.spots.length).padStart(2,'0')+' · '+sel.name,p.n,p.t,p,p.k,p.y);mark(j);refreshSeen();facts();setHash(sel.id+'.'+j,true);
  if(tour.on)tourWait(p)}
 function step(d){if(!sel)return;const n=sel.spots.length;spot(spotIdx<0?(d>0?0:n-1):(spotIdx+d+n)%n)}
 /* chiếu vị trí 3D lên màn hình SAU khi cảnh đã vẽ xong, để ghim số luôn khớp từng khung hình; ghim mờ dần ở mép màn hình và khi ở xa */
@@ -1195,12 +1194,10 @@ $('back').onclick=()=>show(VIEWS.includes(from)?from:'places');
 $('sMore').onclick=()=>{const o=$('sbox').classList.toggle('open');$('sMore').textContent=o?'Thu gọn ▴':'Liên quan ▾';$('sMore').setAttribute('aria-expanded',o)};
 $('bInfo').onclick=()=>{if(sel)openModal(sel,'n')};
 $('bMore').onclick=()=>{if(sel)openModal(sel,'m')};
-$('pX').onclick=()=>{$('panel').classList.add('hide');if(spotIdx>=0){stopTour();hush()}};
+$('pX').onclick=()=>{$('panel').classList.add('hide');if(spotIdx>=0)stopTour();syncHud()};
+$('pInfo').onclick=()=>{if(sel)openModal(sel,'n')};$('pMore').onclick=()=>{if(sel)openModal(sel,'m')};$('pQuiz').onclick=()=>{if(sel){const k='site:'+sel.id;show('quiz');quizMode(k)}};
 $('pPrev').onclick=()=>step(-1);$('pNext').onclick=()=>step(1);
-$('pSay').onclick=()=>{if(!TTS){toast('Trình duyệt này chưa hỗ trợ đọc thuyết minh.');return}voiceOn=!voiceOn;$('pSay').setAttribute('aria-pressed',voiceOn);$('pSay').classList.toggle('on',voiceOn);$('pSay').textContent=voiceOn?'Tắt thuyết minh':'Nghe thuyết minh';
- if(voiceOn){const p=spotIdx>=0?sel.spots[spotIdx]:null;speak(p?p.n+'. '+p.t:sel.name+'. '+sel.text)}else hush()};
-if(!TTS)$('pSay').hidden=true;
-$('spots').onclick=e=>{const b=e.target.closest('button');if(!b)return;if(b.id==='tourBtn'){tour.on?(stopTour(),hush()):startTour()}else if(b.id==='siteInfo'){stopTour();info()}else if(b.dataset.j!==undefined)spot(+b.dataset.j)};
+$('spots').onclick=e=>{const b=e.target.closest('button');if(!b)return;if(b.id==='tourBtn'){tour.on?stopTour():startTour()}else if(b.id==='siteInfo'){stopTour();info()}else if(b.dataset.j!==undefined)spot(+b.dataset.j)};
 $('sTags').onclick=$('sNav').onclick=e=>{const b=e.target.closest('button');if(!b)return;
  if(b.dataset.site){show(b.dataset.site);return}
  const a=b.dataset.a,s=sel;
@@ -1260,7 +1257,6 @@ let last=performance.now(),frame=0;
  renderer.render(scene,camera);
  if(view==='site')pinsUpdate(); /* sau khi vẽ: ma trận máy ảnh đã mới nhất nên ghim không bị trễ một khung hình */
  adapt(dt)})(last);
-if(TTS&&speechSynthesis.getVoices)try{speechSynthesis.getVoices()}catch(e){}
 if(/[?&]dbg\b/.test(location.search))window.__dbg={info:()=>renderer&&{calls:renderer.info.render.calls,tris:renderer.info.render.triangles,pr},pins:()=>pinList.map(b=>({hidden:b.hidden,t:b.style.transform,o:b.style.opacity})),cs,gs,QS,SITES,lights:()=>({sun,hemi,renderer}),pinErr:()=>{camera.updateMatrixWorld();let m=0;pinList.forEach((b,i)=>{if(b.hidden)return;const q=pinPos[i];_pv.set(q[0],q[1],q[2]).project(camera);const sx=(_pv.x*.5+.5)*innerWidth-14,sy=(-_pv.y*.5+.5)*innerHeight-14,t=b.style.transform.match(/translate3?d?\(([-\d.]+)px,\s*([-\d.]+)px/);if(t)m=Math.max(m,Math.hypot(sx-+t[1],sy-+t[2]))});return m},seen:()=>seen,imgs:()=>IMGC};
 show(location.hash.slice(1)||'places',false);
 })();

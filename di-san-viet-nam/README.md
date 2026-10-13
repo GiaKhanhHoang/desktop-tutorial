@@ -27,7 +27,7 @@ Toàn bộ nằm trong **một file** `index.html`; mở trực tiếp bằng tr
 
 Ảnh được tự tìm từ Wikipedia / Wikimedia Commons **khi trang được mở có Internet** (kết quả lưu trong trình duyệt). Mỗi ảnh có ghi nguồn và liên kết giấy phép.
 Ảnh từ bài Wikipedia là ảnh đại diện của bài; điểm nhỏ nào không có bài riêng được tìm trên Commons theo tên (có nhãn “ảnh tự tìm”, nên kiểm tra lại). Khi cần chắc chắn, điền ảnh vào `IMGS`.
-Ảnh sẽ không hiện nếu môi trường hiển thị chặn truy cập tới `*.wikipedia.org` / `*.wikimedia.org` (ví dụ khung xem trước nhúng trong một số công cụ) – khi đó trang vẫn hoạt động bình thường, chỉ không có ảnh.
+Ảnh sẽ không hiện nếu môi trường hiển thị chặn truy cập tới `*.wikipedia.org` / `*.wikimedia.org` – khi đó trang vẫn hoạt động bình thường, chỉ không có ảnh.
 
 ## Ghi chú
 
