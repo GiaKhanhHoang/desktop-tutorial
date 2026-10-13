@@ -1040,7 +1040,7 @@ function figHTML(im,alt){const u=safeUrl(im.u);if(!u)return'';
  let cap;if(im.direct)cap='Ảnh: do người biên soạn cung cấp';
  else if(im.auto)cap=`Ảnh: ${esc(im.cr||'Wikimedia Commons')} · Wikimedia Commons`+(im.page?` · <a href="${esc(im.page)}" target="_blank" rel="noopener noreferrer">nguồn &amp; giấy phép</a>`:'')+' · ảnh tự tìm theo tên, có thể chưa khớp';
  else cap='Ảnh: Wikipedia / Wikimedia Commons'+(im.f?` · <a href="${esc('https://'+(im.l||'vi')+'.wikipedia.org/wiki/File:'+encodeURIComponent(im.f))}" target="_blank" rel="noopener noreferrer">nguồn &amp; giấy phép</a>`:'');
- return `<figure class="ph"><img src="${esc(u)}" alt="${esc(alt)}" decoding="async"><figcaption>${cap}</figcaption></figure>`}
+ return `<figure class="ph"${im.direct?' data-direct="1"':''}><img src="${esc(u)}" alt="${esc(alt)}" decoding="async" referrerpolicy="no-referrer"><figcaption>${cap}</figcaption></figure>`}
 const photoHTML=(o,key,alt)=>{const im=imgOf(o,key);return im?figHTML(im,alt):''};
 function repaintPhotos(){if(view==='site')paintPanel();if(modalOpen)renderModal(true);if(view==='places')paintCards()}
 /* ===== HỘP THOẠI "NỘI DUNG" / "XEM THÊM" ===== */
@@ -1247,7 +1247,7 @@ $('modal').onclick=e=>{if(e.target===$('modal')){closeModal();return}
 document.querySelectorAll('.tabs [role=tab]').forEach(b=>b.onclick=()=>{modalTab=b.dataset.t;renderModal();$('mBody').scrollTop=0});
 $('lbX').onclick=()=>{$('lb').hidden=true};$('lb').onclick=e=>{if(e.target===$('lb'))$('lb').hidden=true};
 document.addEventListener('click',e=>{const im=e.target.closest&&e.target.closest('figure.ph img');if(im)openLb(im)});
-document.addEventListener('error',e=>{const t=e.target;if(t&&t.tagName==='IMG'&&t.closest&&t.closest('figure.ph'))t.closest('figure.ph').remove()},true);
+document.addEventListener('error',e=>{const t=e.target;if(t&&t.tagName==='IMG'&&t.closest&&t.closest('figure.ph')){const f=t.closest('figure.ph');if(f.dataset.direct){f.innerHTML='<figcaption style="padding:10px 12px">Không tải được ảnh từ link đã nhập. Hãy dùng link trực tiếp tới file ảnh (.jpg/.png), mở được công khai; một số trang báo chặn nhúng ảnh sang trang khác.</figcaption>'}else f.remove()}},true);
 addEventListener('keydown',e=>{
  const cp=$('cpBox');if(cp&&!cp.hidden){if(e.key==='Escape'){cp.hidden=true;e.preventDefault()}else if(e.key==='Tab')trapTab(e,cp);return}
  if(!$('lb').hidden){if(e.key==='Escape'){$('lb').hidden=true;e.preventDefault()}else if(e.key==='Tab'){trapTab(e,$('lb'))}return}
