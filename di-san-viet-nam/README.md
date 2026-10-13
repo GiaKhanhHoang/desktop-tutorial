@@ -20,7 +20,7 @@ Toàn bộ nằm trong **một file** `index.html`; mở trực tiếp bằng tr
 * `QUIZ` – câu hỏi: `[địa điểm, số thứ tự điểm nhỏ (-1: phần Nội dung), câu hỏi, 4 đáp án, vị trí đáp án đúng (0–3), giải thích]`.
 * `ABOUT_DEF` – nội dung mặc định của trang Ý nghĩa.
 * `LINKS` – link điền thêm (khóa `id-địa-điểm` hoặc `id-địa-điểm.số-điểm`); trang Công nghệ số có nút sao chép sẵn khối này.
-* `IMGS` – ảnh điền tay (ưu tiên hơn ảnh tự tìm), ví dụ `'den-hung.2':'https://…/anh.jpg'`.
+* `IMGS` – ảnh điền tay (trang Công nghệ số cũng cho chọn file ảnh từ máy, lưu trong trình duyệt) (ưu tiên hơn ảnh tự tìm), ví dụ `'den-hung.2':'https://…/anh.jpg'`.
 * `EDIT` – đặt `false` khi đưa cho người xem để ẩn ô nhập link và bảng quản lý.
 
 ## Ảnh thật
