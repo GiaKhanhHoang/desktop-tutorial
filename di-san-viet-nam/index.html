@@ -285,7 +285,7 @@ const SITES=[
  {n:'Đàn tế Nam Giao',t:'Nằm dưới chân núi Đốn Sơn, cách Hoàng thành khoảng 2,5 km về phía đông nam; khảo cổ cho thấy nền đàn gồm năm tầng bó đá, tổng diện tích khoảng 30.000 m².',pos:[40,2,66],r:22,th:.6,ph:1.2,link:''}]},
 {id:'hoi-an',name:'Phố cổ Hội An',city:'Đà Nẵng (Quảng Nam cũ)',prov:'Đà Nẵng',reg:'Trung',type:'pho',year:'Thế kỷ XVI–XVII',yn:1550,unesco:'Di sản thế giới 1999',ll:[15.8801,108.338],bg:0xb7b79d,
  text:'Thương cảng quốc tế sầm uất, nơi người Việt, Hoa, Nhật giao thoa. UNESCO ghi danh năm 1999.',
- link:'https://vi.wikipedia.org/wiki/Phố_cổ_Hội_An',cam:[10,2,-16,80,.5,1.1],
+ link:'https://vi.wikipedia.org/wiki/Phố_cổ_Hội_An',cam:[8,2,-14,88,.5,1.1],
  spots:[{n:'Chùa Cầu',t:'Cầu mái ngói bắc qua lạch nước, do cộng đồng thương nhân Nhật góp tiền xây vào khoảng thế kỷ XVII nên còn gọi là cầu Nhật Bản. Cầu được dựng lại năm 1817 và đại trùng tu giai đoạn 2022–2024.',y:'Thế kỷ XVII',pos:[28,3,-44],r:24,th:1.35,ph:1.1,link:'https://vi.wikipedia.org/wiki/Chùa_Cầu'},
  {n:'Dãy nhà phố cổ',t:'Những ngôi nhà ống gỗ, mái ngói âm dương san sát, vừa để ở vừa buôn bán.',pos:[-34,3,-14],r:26,th:-.3,ph:1.15,link:''},
  {n:'Hội quán Phúc Kiến',t:'Hội quán của cộng đồng người Hoa, nổi bật với cổng tam quan và mái ngói trang trí cầu kỳ.',pos:[-24,3,20],r:18,th:3.4,ph:1.2,link:''},
@@ -710,31 +710,33 @@ const BUILD={
  T(2,16,22,0x587a45,56,0,76,9);T(1,30,30,0x587a45,-70,0,-60,9);T(1,26,26,0x4d6b43,70,0,-50,9);T(1,34,34,0x587a45,0,0,-90,9);
  trees(16,52)},
 'hoi-an':()=>{ground(0x8fa468,0);
- /* sông Hoài: đoạn chính chạy ngang (phố đèn lồng), rồi rẽ trái lên phía bắc; Chùa Cầu bắc qua đoạn rẽ */
- const HW=7.5,P=[],fz=x=>2.2*Math.sin(x/15)*Math.max(0,Math.min(1,(10-x)/12)),BX=28,BZ=-44,R0=14;
- for(let x=-76;x<14;x+=1)P.push([x,fz(x)]);
- for(let t=0;t<Math.PI/2;t+=.06)P.push([14+R0*Math.sin(t),-R0+R0*Math.cos(t)]);
- for(let z=-14;z>=-92;z-=1)P.push([BX,z]);
- const ang=i=>{const a=P[Math.max(0,i-1)],b=P[Math.min(P.length-1,i+1)];return Math.atan2(b[1]-a[1],b[0]-a[0])};
+ /* sông Hoài chính uốn lượn qua phố cổ (phố đèn lồng dọc hai bờ); từ sông chính tách ra một nhánh hẹp chạy lên phía bắc - Chùa Cầu bắc qua nhánh này */
+ const HW=7.5,HW2=5.4,BX=28,BZ=-44,fz=x=>3*Math.sin(x/18),P=[],Q=[];
+ for(let x=-80;x<=80;x+=1)P.push([x,fz(x)]);
+ for(let z=fz(BX);z>=-92;z-=1)Q.push([BX,z]);
+ const ang=(A,i)=>{const a=A[Math.max(0,i-1)],b=A[Math.min(A.length-1,i+1)];return Math.atan2(b[1]-a[1],b[0]-a[0])};
  const xf=(n0,th,tx,tz)=>{const R=new THREE.Matrix4();for(let i=n0;i<G.children.length;i++){const o=G.children[i];o.updateMatrix();R.makeRotationY(th).setPosition(tx,0,tz).multiply(o.matrix);R.decompose(o.position,o.quaternion,o.scale)}};
- const dPath=(x,z)=>{let m=1e9;for(let i=0;i<P.length;i+=2){const d=Math.hypot(P[i][0]-x,P[i][1]-z);if(d<m)m=d}return m};
- for(let i=0;i<P.length;i+=4){const a=ang(i),[x,z]=P[i],px=-Math.sin(a),pz=Math.cos(a);
-  const w=B(7.4,.14,2*HW,WATER,x,0,z);w.rotation.y=-a;
-  for(const sg of[-1,1]){const q=B(7.4,.55,1.1,0x9a8f78,x+px*sg*(HW+.4),0,z+pz*sg*(HW+.4));q.rotation.y=-a;const r=B(7.4,.04,5,0xcfbf98,x+px*sg*(HW+3.6),0,z+pz*sg*(HW+3.6));r.rotation.y=-a}}
+ const dist=(A,x,z)=>{let m=1e9;for(let i=0;i<A.length;i+=2){const d=Math.hypot(A[i][0]-x,A[i][1]-z);if(d<m)m=d}return m};
+ const mouth=fz(BX)-HW-2;
+ for(const[A,hw,main]of[[P,HW,1],[Q,HW2,0]])for(let i=0;i<A.length;i+=4){const a=ang(A,i),[x,z]=A[i],px=-Math.sin(a),pz=Math.cos(a);
+  const w=B(7.4,.14,2*hw,WATER,x,0,z);w.rotation.y=-a;
+  for(const sg of[-1,1]){if(main&&sg<0&&Math.abs(x-BX)<hw*0+HW2+4)continue;if(!main&&z>mouth)continue;
+   const q=B(7.4,.55,1.1,0x9a8f78,x+px*sg*(hw+.4),0,z+pz*sg*(hw+.4));q.rotation.y=-a;const r=B(7.4,.04,5,0xcfbf98,x+px*sg*(hw+3.6),0,z+pz*sg*(hw+3.6));r.rotation.y=-a}}
  /* nhà phố cổ hai bên bờ: chỉ đặt nơi cách sông đủ xa và không đè lên nhau */
  const HC=[0xe3b640,0xd8a94a,0xe8c75f,0xcf9a3c,0xdcc58a,0xe0a93e],RC=[0x7a3b2a,0x6a4a3a,0x8a4a2a],placed=[];
  const HQ=[-24,fz(-24)+HW+15];let hn=0;
- for(let i=0;i<P.length;i+=7)for(const sg of[-1,1]){const a=ang(i),[x,z]=P[i],hxp=x-Math.sin(a)*sg*17,hzp=z+Math.cos(a)*sg*17;
-  if(dPath(hxp,hzp)<15.5||(Math.abs(hzp-BZ)<10.5&&Math.abs(hxp-BX)<34)||Math.hypot(hxp-HQ[0],hzp-HQ[1])<10||Math.abs(hxp)>70||hzp<-86)continue;
+ for(const[A,hw]of[[P,HW],[Q,HW2]])for(let i=0;i<A.length;i+=7)for(const sg of[-1,1]){const a=ang(A,i),[x,z]=A[i],off=hw+9.5,hxp=x-Math.sin(a)*sg*off,hzp=z+Math.cos(a)*sg*off;
+  if(dist(P,hxp,hzp)<HW+8||dist(Q,hxp,hzp)<HW2+8||(Math.abs(hzp-BZ)<10.5&&Math.abs(hxp-BX)<30)||Math.hypot(hxp-HQ[0],hzp-HQ[1])<10||Math.abs(hxp)>72||hzp<-88)continue;
   if(placed.some(q=>Math.hypot(q[0]-hxp,q[1]-hzp)<6.6))continue;placed.push([hxp,hzp]);
   const h=4.2+(hn%3)*.7,col=HC[hn%6],rc=RC[hn%3],n0=G.children.length;hn++;
   B(5.8,h,6.6,col,0,0,0);R(6.9,7.7,2.2,rc,0,h,0);B(1.3,2.5,.2,0x5a3a22,0,0,-3.4);for(const dx of[-1.9,1.9])B(.9,1.3,.2,0x3f6a4a,dx,1.5,-3.4);
   B(5,.16,.9,0x6a4a2d,0,h-.6,-3.7);for(const dx of[-1.6,1.6])B(1,1.3,.2,0x3f6a4a,dx,h-1.9,-3.4);
   xf(n0,sg>0?-a:Math.PI-a,hxp,hzp)}
- /* đèn lồng dọc hai bờ đoạn sông chính */
- for(let i=0;i<P.length;i+=5){const[x,z]=P[i];if(x<-62||x>8)continue;const a=ang(i);for(const sg of[-1,1]){const lx=x-Math.sin(a)*sg*(HW+1.4),lz=z+Math.cos(a)*sg*(HW+1.4);C(.06,3,0x3a3a3a,lx,0,lz,5);S(.3,(i/5&1)?0xcc2f23:0xe8a21d,lx,3.1,lz).scale.set(1,1.25,1)}}
- for(let i=6;i<P.length;i+=13)for(const sg of[-1,1]){const a=ang(i),[x,z]=P[i],tx=x-Math.sin(a)*sg*(HW+4.2),tz=z+Math.cos(a)*sg*(HW+4.2);if(!(Math.abs(tz-BZ)<10.5&&Math.abs(tx-BX)<34)&&Math.hypot(tx-HQ[0],tz-HQ[1])>10)tree(tx,tz)}
- for(const[i,o,c]of[[18,1,0x6b4a2d],[40,-2.5,0x2f5a6b],[66,2,0x7a3b2a],[88,-1,0x6b4a2d],[130,1.5,0x2f5a6b],[160,-1,0x7a3b2a],[185,1,0x6b4a2d]]){const a=ang(i),p=P[i];if(p)boat(p[0]-Math.sin(a)*o,p[1]+Math.cos(a)*o,-a,c)}
+ /* đèn lồng dọc hai bờ sông chính */
+ for(let i=0;i<P.length;i+=5){const[x,z]=P[i];if(x<-62||x>14||Math.abs(x-BX)<6)continue;const a=ang(P,i);for(const sg of[-1,1]){const lx=x-Math.sin(a)*sg*(HW+1.4),lz=z+Math.cos(a)*sg*(HW+1.4);C(.06,3,0x3a3a3a,lx,0,lz,5);S(.3,(i/5&1)?0xcc2f23:0xe8a21d,lx,3.1,lz).scale.set(1,1.25,1)}}
+ for(const[A,hw]of[[P,HW],[Q,HW2]])for(let i=6;i<A.length;i+=13)for(const sg of[-1,1]){const a=ang(A,i),[x,z]=A[i],tx=x-Math.sin(a)*sg*(hw+4.2),tz=z+Math.cos(a)*sg*(hw+4.2);if(!(Math.abs(tz-BZ)<10.5&&Math.abs(tx-BX)<30)&&Math.hypot(tx-HQ[0],tz-HQ[1])>10&&dist(A===P?Q:P,tx,tz)>hw+3&&tz>-90)tree(tx,tz)}
+ for(const[i,o,c]of[[20,1,0x6b4a2d],[46,-2.5,0x2f5a6b],[72,2,0x7a3b2a],[100,-1,0x6b4a2d],[126,1.5,0x2f5a6b],[148,-1,0x7a3b2a]]){const a=ang(P,i),p=P[i];boat(p[0]-Math.sin(a)*o,p[1]+Math.cos(a)*o,-a,c)}
+ boat(BX,-30,-Math.PI/2,0x2f5a6b);boat(BX+.5,-60,-Math.PI/2,0x7a3b2a);
  /* ---- Chùa Cầu (dựng ở gốc tọa độ rồi xoay vào đoạn sông rẽ) ---- */
  const nb=G.children.length;
  const WD=0x7a3b2a,WD2=0x5a3a22,STN=0x9a8f78;
@@ -1239,7 +1241,7 @@ function facts(){const s=sel,p=spotIdx>=0?s.spots[spotIdx]:null,r=[];
  $('pF').innerHTML=r.map(([a,b])=>`<dt>${esc(a)}</dt><dd>${esc(b)}</dd>`).join('');$('pA2').hidden=!p}
 function panel(k,t,p,o,key,y){closePop();$('pK').textContent=k;$('pT').textContent=t;$('pP').textContent=p;$('pY').innerHTML=y?`<span class="tag">${esc(y)}</span>`:'';$('pY').style.display=y?'':'none';linkBox(o,key,$('pL'));curPanel={o,key,t};paintPanel();$('panel').classList.remove('hide');$('panel').scrollTop=0;facts();syncHud()}
 function info(){spotIdx=-1;auto=true;go(sel.cam);panel('Địa danh · '+sel.year,sel.name,sel.text,sel,sel.id);mark(-1);setHash(sel.id,true)}
-function spot(j,keep){const p=sel.spots[j];if(!p)return;if(!keep)stopTour();spotIdx=j;auto=false;markSeen(p.k);go([p.pos[0],p.pos[1],p.pos[2],Math.min(125,p.r*1.5),p.th,p.ph]);
+function spot(j,keep){const p=sel.spots[j];if(!p)return;if(!keep)stopTour();spotIdx=j;auto=true;markSeen(p.k);go([p.pos[0],p.pos[1],p.pos[2],Math.min(125,p.r*1.5),p.th,p.ph]);
  panel('ĐIỂM '+String(j+1).padStart(2,'0')+' / '+String(sel.spots.length).padStart(2,'0')+' · '+sel.name,p.n,p.t,p,p.k,p.y);mark(j);refreshSeen();facts();setHash(sel.id+'.'+j,true);
  if(tour.on)tourWait(p)}
 function step(d){if(!sel)return;const n=sel.spots.length;spot(spotIdx<0?(d>0?0:n-1):(spotIdx+d+n)%n)}
@@ -1385,7 +1387,7 @@ let last=performance.now(),frame=0;
 (function loop(now){requestAnimationFrame(loop);const dt=Math.min(.05,Math.max(0,((now||last)-last)/1000));last=now||last;
  if(!HAS3D)return;
  gs.vy=view==='site'&&innerWidth<=700&&!$('panel').classList.contains('hide')?.17:0;
- if(auto&&!ptrs.size&&!RM)gs.th+=dt*.045;
+ if(auto&&!ptrs.size&&!RM)gs.th+=dt*.06;
  if(inertia&&!ptrs.size){gs.th+=inertia*dt;inertia*=Math.exp(-dt*3);if(Math.abs(inertia)<.02)inertia=0}
  follow(dt);place();
  if(view!=='site'&&(frame++&3))return; /* khi chỉ làm nền cho các trang danh sách thì vẽ thưa hơn để đỡ tốn pin */
