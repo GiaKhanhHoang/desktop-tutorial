@@ -173,6 +173,7 @@ figure.ph figcaption{font-size:10px;line-height:1.5;color:var(--dim);padding:5px
 .abody h2.ah{font-size:17px;letter-spacing:.08em;text-transform:uppercase;font-weight:800;color:var(--gold);margin:26px 0 10px}
 .aprev{border:1px dashed var(--line2);padding:14px 18px;min-height:40px}
 .blk{max-width:1000px;border:1px solid var(--line);background:var(--glass);margin:12px 0}.blk>summary{cursor:pointer;list-style:none;padding:15px 18px;font:600 19px "Noto Serif","Be Vietnam Pro",serif;color:var(--tx);display:flex;align-items:center;gap:10px}.blk>summary::-webkit-details-marker{display:none}.blk>summary::before{content:"▸";color:var(--gold);font-size:15px;transition:transform .2s}.blk[open]>summary::before{transform:rotate(90deg)}.blk[open]>summary{border-bottom:1px solid var(--line)}.blk>summary small{font:500 12px "Be Vietnam Pro",sans-serif;color:var(--dim);margin-left:4px}.blk>summary:hover{background:var(--glass2)}.blk .bb{padding:10px 18px 20px}.blk .mgr{max-width:none}
+.exp{margin-top:18px;padding-top:14px;border-top:1px dashed var(--line2)}.exp .hp{margin:8px 0 4px}
 </style></head><body>
 <div id="scene"></div>
 <header><div class="brand"><div class="seal">遺</div><span>Di sản Việt Nam · 3D</span></div>
@@ -1074,7 +1075,8 @@ function mgrHTML(){const rows=[`<div class="mhd"><span>Địa điểm / di tích
   rows.push(`<div class="mrow3" data-n="${esc(norm('giới thiệu chung'))}"><span>Giới thiệu chung</span>${cell(s,s.id)}</div>`);
   s.spots.forEach((p,j)=>rows.push(`<div class="mrow3 sp" data-n="${esc(norm(p.n))}"><span>${j+1}. ${esc(p.n)}</span>${cell(p,s.id+'.'+j)}</div>`));rows.push('</section>')}
  return `<div class="mfind"><input type="search" id="mQ" placeholder="Tìm nhanh địa điểm hoặc di tích, ví dụ: hầm đờ cát, chùa cầu…" aria-label="Tìm trong bảng liên kết và ảnh" autocomplete="off"><div class="mchips">${SITES.map(s=>`<button type="button" class="chip" data-mgj="${s.id}">${esc(s.name.replace(/^(Khu di tích|Thánh địa|Quần thể|Phố cổ|Chiến trường|Cố đô|Thành|Vịnh|Hoàng thành) /,'').replace(/^./,c=>c.toUpperCase()))}</button>`).join('')}</div><span class="note" id="mCnt"></span></div>
- <div class="mgr" id="mgr">${rows.join('')}</div><div class="row"><button class="btn" type="button" id="mCopy">Sao chép khối LINKS</button><button class="btn" type="button" id="iCopy">Sao chép khối IMGS</button><button class="btn ghost" type="button" id="mClear">Xóa link đã nhập</button><button class="btn ghost" type="button" id="iClear">Xóa ảnh đã nhập</button></div>`}
+ <div class="mgr" id="mgr">${rows.join('')}</div><div class="row"><button class="btn" type="button" id="mCopy">Sao chép khối LINKS</button><button class="btn" type="button" id="iCopy">Sao chép khối IMGS</button><button class="btn ghost" type="button" id="mClear">Xóa link đã nhập</button><button class="btn ghost" type="button" id="iClear">Xóa ảnh đã nhập</button></div>
+ <div class="exp"><button class="btn" type="button" id="exBtn">Tải bản index.html có sẵn ảnh &amp; nội dung của tôi</button><p class="hp">Tạo một file index.html đã gắn sẵn mọi ảnh (kể cả ảnh chọn từ máy), link và nội dung bạn đã điền, rồi tải về. Đưa file này lên GitHub thay cho file cũ là ai mở link cũng thấy. Chỉ dùng được khi mở trang từ link GitHub Pages (hoặc máy chủ), không dùng được trên bản xem trước claude.ai.</p><span class="st" id="exSt"></span></div>`}
 /* tìm nhanh + nhảy tới cụm + thu gọn từng cụm trong bảng */
 function mgrNav(){const q=$('mQ');if(!q)return;
  const apply=()=>{const t=norm(q.value).trim();let n=0;if(t)openBlk('mgr');
@@ -1118,7 +1120,23 @@ function imgMgrBind(){const stat=k=>{const e=document.querySelector(`[data-ist="
   try{if(!navigator.clipboard||!navigator.clipboard.read)return fail();const items=await navigator.clipboard.read();for(const it of items){const t=it.types.find(x=>/^image\//.test(x));if(t){saveImgFile(k,new File([await it.getType(t)],'dan.'+t.split('/')[1],{type:t}));return}}toast('Chưa có ảnh nào được sao chép. Hãy chuột phải vào ảnh → Sao chép hình ảnh, rồi dán lại.')}catch(e){fail()}});
  document.querySelectorAll('#mgr [data-idel]').forEach(b=>b.onclick=()=>{const k=b.dataset.idel;delete imgStore[k];persistImgs();const i=document.querySelector(`[data-ikey="${k}"]`);if(i)i.value=IMGS[k]||'';stat(k)});
  $('iCopy').onclick=()=>{const all=Object.assign({},IMGS,imgStore);const big=Object.keys(all).filter(k=>/^data:/.test(all[k]));big.forEach(k=>delete all[k]);if(big.length)toast('Ảnh chọn từ máy ('+big.length+') không nằm trong khối IMGS; chúng chỉ lưu trên trình duyệt này.');copyText('const IMGS={\n'+Object.keys(all).filter(k=>all[k]).map(k=>` ${JSON.stringify(k)}:${JSON.stringify(all[k])},`).join('\n')+'\n};','Đã sao chép khối IMGS')};
+ $('exBtn').onclick=exportSite;
  $('iClear').onclick=()=>{imgStore={};persistImgs();renderLinks();toast('Đã xóa ảnh đã nhập')}}
+
+/* xuất bản index.html đã nhúng sẵn ảnh, link và nội dung người dùng đã điền (cần mở trang qua http/https) */
+async function exportSite(){const st=$('exSt'),say=t=>{if(st)st.textContent=t};
+ try{say('Đang tạo file…');
+  const u=location.href.split('#')[0].split('?')[0];
+  const r=await fetch(u,{cache:'no-store'});if(!r.ok)throw new Error('http '+r.status);let s=await r.text();
+  const merge=(base,extra)=>Object.assign({},base,extra),obj=o=>Object.keys(o).filter(k=>o[k]).map(k=>` ${JSON.stringify(k)}:${JSON.stringify(o[k])},`).join('\n');
+  const swap=(re,val,name)=>{if(!re.test(s))throw new Error('không tìm thấy '+name);s=s.replace(re,()=>val)};
+  swap(/const IMGS=\{[\s\S]*?\n\};/,'const IMGS={\n'+obj(merge(IMGS,imgStore))+'\n};','IMGS');
+  swap(/const LINKS=\{[\s\S]*?\n\};/,'const LINKS={\n'+obj(merge(LINKS,store))+'\n};','LINKS');
+  swap(/const ABOUT_TEXT_DEF="(?:[^"\\]|\\.)*";/,'const ABOUT_TEXT_DEF='+JSON.stringify(CT.about.val)+';','ABOUT');
+  swap(/const TECH_TEXT_DEF="(?:[^"\\]|\\.)*";/,'const TECH_TEXT_DEF='+JSON.stringify(CT.tech.val)+';','TECH');
+  const blob=new Blob([s],{type:'text/html;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='index.html';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+  say('Đã tạo file index.html ('+(s.length/1048576).toFixed(1)+' MB). Nếu trình duyệt không tải, kiểm tra thông báo chặn tải về.')}
+ catch(e){say('Không tạo được file: '+(e&&e.message||e)+'. Hãy mở trang bằng link GitHub Pages rồi thử lại.')}}
 /* ===== ẢNH THẬT: tự tìm trên Wikipedia / Wikimedia Commons khi trang được mở có Internet ===== */
 const IMGC=ls.json('dsvn.img.v2',{});let imgDirty=false,imgOff=0;
 const DAY=864e5;
