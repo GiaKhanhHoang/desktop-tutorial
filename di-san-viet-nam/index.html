@@ -172,6 +172,7 @@ figure.ph figcaption{font-size:10px;line-height:1.5;color:var(--dim);padding:5px
 .abody{max-width:760px;font-size:15px;line-height:1.85;color:var(--soft)}.abody p{margin:0 0 12px}.abody ul{margin:0 0 14px;padding-left:22px}.abody li{margin-bottom:6px}.abody b{color:var(--tx)}
 .abody h2.ah{font-size:17px;letter-spacing:.08em;text-transform:uppercase;font-weight:800;color:var(--gold);margin:26px 0 10px}
 .aprev{border:1px dashed var(--line2);padding:14px 18px;min-height:40px}
+.blk{max-width:1000px;border:1px solid var(--line);background:var(--glass);margin:12px 0}.blk>summary{cursor:pointer;list-style:none;padding:15px 18px;font:600 19px "Noto Serif","Be Vietnam Pro",serif;color:var(--tx);display:flex;align-items:center;gap:10px}.blk>summary::-webkit-details-marker{display:none}.blk>summary::before{content:"▸";color:var(--gold);font-size:15px;transition:transform .2s}.blk[open]>summary::before{transform:rotate(90deg)}.blk[open]>summary{border-bottom:1px solid var(--line)}.blk>summary small{font:500 12px "Be Vietnam Pro",sans-serif;color:var(--dim);margin-left:4px}.blk>summary:hover{background:var(--glass2)}.blk .bb{padding:10px 18px 20px}.blk .mgr{max-width:none}
 </style></head><body>
 <div id="scene"></div>
 <header><div class="brand"><div class="seal">遺</div><span>Di sản Việt Nam · 3D</span></div>
@@ -1035,18 +1036,22 @@ function renderMap(){
  drawMap();mapList()}
 /* ===== TRANG "LIÊN KẾT": nội dung trang Ý nghĩa + link thông tin + link ảnh ===== */
 const FMT={h:['# ','Đầu mục'],b:['**','In đậm'],u:[null,'IN HOA'],l:['- ','Gạch đầu dòng']};
+/* các mục lớn ở trang Liên kết: mặc định thu gọn, bấm tiêu đề để mở từng mục (nhớ trạng thái mở khi vẽ lại trang) */
+const OPENALL=/[?&]open\b/.test(location.search),blkOpen=new Set();
+const blk=(id,title,body)=>`<details class="blk" data-b="${id}"${OPENALL||blkOpen.has(id)?' open':''}><summary>${title}</summary><div class="bb">${body}</div></details>`;
+function openBlk(id){const d=document.querySelector(`details.blk[data-b="${id}"]`);if(d&&!d.open){d.open=true;blkOpen.add(id)}}
 function edBox(k,title,hint){const c=CT[k];
- return `<h2 class="sec" style="margin-top:6px">${title}</h2><p class="hp">${hint} Chọn chữ rồi bấm nút để định dạng; nội dung được lưu tự động trên trình duyệt này.</p>
+ return blk(k,title,`<p class="hp">${hint} Chọn chữ rồi bấm nút để định dạng; nội dung được lưu tự động trên trình duyệt này.</p>
  <div class="atb" role="toolbar" aria-label="Định dạng"><button type="button" class="btn ghost sm" data-fmt="h" data-ed="${k}" title="Biến dòng đang đứng thành đầu mục (in đậm, in hoa)"><b>ĐẦU MỤC</b></button><button type="button" class="btn ghost sm" data-fmt="b" data-ed="${k}" title="In đậm chữ đang chọn"><b>In đậm</b></button><button type="button" class="btn ghost sm" data-fmt="u" data-ed="${k}" title="Chuyển chữ đang chọn thành IN HOA">IN HOA</button><button type="button" class="btn ghost sm" data-fmt="l" data-ed="${k}" title="Gạch đầu dòng">• Gạch đầu dòng</button><button type="button" class="btn ghost sm" data-fmt="copy" data-ed="${k}">Sao chép</button><button type="button" class="btn ghost sm" data-fmt="clear" data-ed="${k}">Xóa hết</button><button type="button" class="btn ghost sm" data-fmt="reset" data-ed="${k}" title="Quay về nội dung mẫu ban đầu">Về mẫu</button><span class="st" id="${c.sid}"></span></div>
  <textarea id="${c.bid}" data-ed="${k}" class="abox" spellcheck="false" placeholder="Ví dụ:&#10;# Đầu mục&#10;Đoạn văn có **chữ in đậm**&#10;- Ý thứ nhất&#10;- Ý thứ hai">${esc(c.val)}</textarea>
- <h3 class="sec" style="font-size:14px;margin-top:14px">Xem trước</h3><div class="abody aprev" id="${c.pid}">${aboutHTML(c.val)}</div>`}
+ <h3 class="sec" style="font-size:14px;margin-top:14px">Xem trước</h3><div class="abody aprev" id="${c.pid}">${aboutHTML(c.val)}</div>`)}
 function renderLinks(){
  if(!EDIT){show('places');return}
  $('view').innerHTML=`<div class="wrap"><div class="eyebrow">Dành cho người biên soạn</div><h1>Liên kết</h1>
  ${edBox('about','Nội dung trang “Ý nghĩa”','Điền nội dung vào hộp dưới đây, trang “Ý nghĩa” sẽ hiện đúng nội dung này.')}
- <div style="height:26px"></div>
- ${edBox('tech','Nội dung trang “Công nghệ số”','Điền nội dung vào hộp dưới đây, trang “Công nghệ số” sẽ hiện đúng nội dung này.')}
- ${mgrHTML()}</div>`;
+  ${edBox('tech','Nội dung trang “Công nghệ số”','Điền nội dung vào hộp dưới đây, trang “Công nghệ số” sẽ hiện đúng nội dung này.')}
+ ${blk('mgr','Quản lý liên kết và ảnh <small>dành cho người biên soạn</small>',mgrHTML())}</div>`;
+ document.querySelectorAll('details.blk').forEach(d=>d.addEventListener('toggle',()=>{d.open?blkOpen.add(d.dataset.b):blkOpen.delete(d.dataset.b)}));
  mgrBind();imgMgrBind()}
 function edSave(k){const c=CT[k],t=$(c.bid);if(!t)return;c.val=t.value;const ok=ls.set(c.key,c.val),s=$(c.sid);if(s)s.textContent=ok?'Đã lưu':'Không lưu được (trình duyệt chặn) – hãy sao chép nội dung';const pv=$(c.pid);if(pv)pv.innerHTML=aboutHTML(c.val)}
 function edFmt(k,id){const c=CT[id],t=c&&$(c.bid);if(!t)return;
@@ -1063,21 +1068,21 @@ function edFmt(k,id){const c=CT[id],t=c&&$(c.bid);if(!t)return;
  t.focus();edSave(id)}
 function mgrHTML(){const rows=[`<div class="mhd"><span>Địa điểm / di tích</span><span>Link thông tin</span><span>Link ảnh</span></div>`];
  const cell=(o,key)=>`<div class="mc"><input type="url" data-key="${key}" placeholder="https://…" aria-label="Link thông tin: ${esc(o.n||o.name)}" value="${esc(getLink(o,key))}"><span class="st" data-st="${key}"></span></div><div class="mc"><div class="ifld"><input type="url" data-ikey="${key}" placeholder="Dán link ảnh hoặc nhấn Ctrl+V để dán ảnh" aria-label="Link ảnh: ${esc(o.n||o.name)}" value="${esc(/^data:/.test(imgStore[key]||'')?'':(imgStore[key]||IMGS[key]||''))}"><label class="btn ghost sm fbtn" title="Chọn ảnh từ máy">Chọn file<input type="file" accept="image/*" data-ifile="${key}" hidden></label><button type="button" class="btn ghost sm" data-idel="${key}" title="Xóa ảnh này" hidden>✕</button></div><span class="st" data-ist="${key}"></span></div>`;
- for(const s of SITES){rows.push(`<section class="mgs" id="mg-${s.id}" data-n="${esc(norm(s.name+' '+s.city))}"><button type="button" class="sh" data-mgt="${s.id}" aria-expanded="true">${esc(s.name)}<i>${s.spots.length+1} ô · bấm để thu gọn</i></button>`);
+ for(const s of SITES){rows.push(`<section class="mgs${OPENALL?'':' shut'}" id="mg-${s.id}" data-n="${esc(norm(s.name+' '+s.city))}"><button type="button" class="sh" data-mgt="${s.id}" aria-expanded="${OPENALL}">${esc(s.name)}<i>${s.spots.length+1} ô · bấm để ${OPENALL?'thu gọn':'mở'}</i></button>`);
   rows.push(`<div class="mrow3" data-n="${esc(norm('giới thiệu chung'))}"><span>Giới thiệu chung</span>${cell(s,s.id)}</div>`);
   s.spots.forEach((p,j)=>rows.push(`<div class="mrow3 sp" data-n="${esc(norm(p.n))}"><span>${j+1}. ${esc(p.n)}</span>${cell(p,s.id+'.'+j)}</div>`));rows.push('</section>')}
- return `<h2 class="sec">Quản lý liên kết và ảnh (dành cho người biên soạn)</h2><div class="mfind"><input type="search" id="mQ" placeholder="Tìm nhanh địa điểm hoặc di tích, ví dụ: hầm đờ cát, chùa cầu…" aria-label="Tìm trong bảng liên kết và ảnh" autocomplete="off"><div class="mchips">${SITES.map(s=>`<button type="button" class="chip" data-mgj="${s.id}">${esc(s.name.replace(/^(Khu di tích|Thánh địa|Quần thể|Phố cổ|Chiến trường|Cố đô|Thành|Vịnh|Hoàng thành) /,'').replace(/^./,c=>c.toUpperCase()))}</button>`).join('')}</div><span class="note" id="mCnt"></span></div>
+ return `<div class="mfind"><input type="search" id="mQ" placeholder="Tìm nhanh địa điểm hoặc di tích, ví dụ: hầm đờ cát, chùa cầu…" aria-label="Tìm trong bảng liên kết và ảnh" autocomplete="off"><div class="mchips">${SITES.map(s=>`<button type="button" class="chip" data-mgj="${s.id}">${esc(s.name.replace(/^(Khu di tích|Thánh địa|Quần thể|Phố cổ|Chiến trường|Cố đô|Thành|Vịnh|Hoàng thành) /,'').replace(/^./,c=>c.toUpperCase()))}</button>`).join('')}</div><span class="note" id="mCnt"></span></div>
  <div class="mgr" id="mgr">${rows.join('')}</div><div class="row"><button class="btn" type="button" id="mCopy">Sao chép khối LINKS</button><button class="btn" type="button" id="iCopy">Sao chép khối IMGS</button><button class="btn ghost" type="button" id="mClear">Xóa link đã nhập</button><button class="btn ghost" type="button" id="iClear">Xóa ảnh đã nhập</button></div>`}
 /* tìm nhanh + nhảy tới cụm + thu gọn từng cụm trong bảng */
 function mgrNav(){const q=$('mQ');if(!q)return;
- const apply=()=>{const t=norm(q.value).trim();let n=0;
+ const apply=()=>{const t=norm(q.value).trim();let n=0;if(t)openBlk('mgr');
   document.querySelectorAll('#mgr .mgs').forEach(sec=>{const siteHit=!t||sec.dataset.n.includes(t);let any=false;
    sec.querySelectorAll('.mrow3').forEach(r=>{const hit=siteHit||r.dataset.n.includes(t);r.hidden=!hit;if(hit){any=true;n++}});
    sec.hidden=!any;if(t&&any)sec.classList.remove('shut')});
   $('mCnt').textContent=t?(n?n+' ô phù hợp':'Không có kết quả'):''};
  q.oninput=apply;
  $('mgr').addEventListener('click',e=>{const b=e.target.closest('[data-mgt]');if(!b)return;const sec=b.parentNode,shut=sec.classList.toggle('shut');b.setAttribute('aria-expanded',!shut);b.querySelector('i').textContent=shut?'bấm để mở':'bấm để thu gọn'});
- document.querySelectorAll('[data-mgj]').forEach(b=>b.onclick=()=>{q.value='';apply();const sec=$('mg-'+b.dataset.mgj);sec.classList.remove('shut');const h=sec.querySelector('.sh');h.setAttribute('aria-expanded','true');h.querySelector('i').textContent='bấm để thu gọn';const v=$('view');v.scrollTo({top:sec.getBoundingClientRect().top-v.getBoundingClientRect().top+v.scrollTop-130,behavior:RM?'auto':'smooth'});const f=sec.querySelector('input');if(f)f.focus({preventScroll:true})})}
+ document.querySelectorAll('[data-mgj]').forEach(b=>b.onclick=()=>{q.value='';apply();openBlk('mgr');const sec=$('mg-'+b.dataset.mgj);sec.classList.remove('shut');const h=sec.querySelector('.sh');h.setAttribute('aria-expanded','true');h.querySelector('i').textContent='bấm để thu gọn';const v=$('view');v.scrollTo({top:sec.getBoundingClientRect().top-v.getBoundingClientRect().top+v.scrollTop-130,behavior:RM?'auto':'smooth'});const f=sec.querySelector('input');if(f)f.focus({preventScroll:true})})}
 function mgrBind(){mgrNav();const stat=k=>{const e=document.querySelector(`[data-st="${k}"]`);if(!e)return;const [o]=ownerOf(k);const t=linkSrc(o,k);e.textContent=t;e.className='st'+(t==='đã nhập'?' on':'')};
  const ownerOf=k=>{const[id,n]=k.split('.');const s=byId[id];return [n===undefined?s:s.spots[+n]]};
  document.querySelectorAll('#mgr input[data-key]').forEach(i=>{const k=i.dataset.key;stat(k);
