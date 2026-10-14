@@ -165,6 +165,8 @@ figure.ph figcaption{font-size:10px;line-height:1.5;color:var(--dim);padding:5px
 .rvb{padding:15px 18px;border-radius:12px;font:700 14px "Be Vietnam Pro",sans-serif;letter-spacing:.1em;border:1.5px solid var(--gold);background:var(--glass2);box-shadow:0 2px 10px rgba(0,0,0,.08)}
 .rvb:hover{background:var(--gold);color:#fff}
 .rvb i{font-size:15px}
+.pin::after{content:attr(data-n);position:absolute;left:calc(100% + 6px);top:50%;transform:translateY(-50%);white-space:nowrap;padding:3px 9px;border-radius:12px;background:var(--pinbg);color:var(--tx);border:1px solid var(--line);font:600 11.5px "Be Vietnam Pro",sans-serif;box-shadow:0 2px 8px rgba(30,20,0,.25)}.pin.on::after{background:var(--gold);color:#fff;border-color:var(--gold)}
+@media(max-width:700px){.pin::after{font-size:10.5px;padding:2px 7px}}
 </style></head><body>
 <div id="scene"></div>
 <header><div class="brand"><div class="seal">遺</div><span>Di sản Việt Nam · 3D</span></div>
@@ -1119,13 +1121,13 @@ function openSite(s,j=-1){if(view!=='site')from=view;view='site';sel=s;spotIdx=-
  $('sNav').innerHTML=(pv?`<button type="button" data-site="${pv.id}">‹ ${esc(pv.name)} · ${esc(pv.year)}</button>`:'')+(nx?`<button type="button" data-site="${nx.id}">${esc(nx.name)} · ${esc(nx.year)} ›</button>`:'')+`<button type="button" data-a="tl">Xem trên dòng thời gian</button><button type="button" data-a="map">Xem trên bản đồ</button>`;
  $('spots').innerHTML=`<button class="loc tour" id="tourBtn" type="button">▶ TỰ ĐỘNG</button>`+s.spots.map((p,i)=>`<button class="loc" type="button" data-j="${i}">${String(i+1).padStart(2,'0')} · ${esc(p.n.toUpperCase())}</button>`).join('')+`<button class="loc" id="siteInfo" type="button">TỔNG QUAN</button>`;
  $('pins').innerHTML='';pinList.length=0;pinPos.length=0;
- s.spots.forEach((p,i)=>{const b=document.createElement('button');b.className='pin';b.type='button';b.textContent=i+1;b.setAttribute('aria-label','Điểm '+(i+1)+': '+p.n);b.title=p.n;b.onclick=()=>spot(i);b.hidden=true;$('pins').appendChild(b);pinList.push(b);pinPos.push(p.mk||[p.pos[0],p.pos[1]+4,p.pos[2]])});
+ s.spots.forEach((p,i)=>{const b=document.createElement('button');b.className='pin';b.type='button';b.textContent=i+1;b.setAttribute('aria-label','Điểm '+(i+1)+': '+p.n);b.title=p.n;b.dataset.n=p.n;b.onclick=()=>spot(i);b.hidden=true;$('pins').appendChild(b);pinList.push(b);pinPos.push(p.mk||[p.pos[0],p.pos[1]+4,p.pos[2]])});
  $('panel').classList.add('hide');curPanel=null;mark(-1);refreshSeen();syncHud();
  ensureImages(s).then(ch=>{if(ch&&sel===s)repaintPhotos()});
  if(j>=0&&s.spots[j])spot(j)}
 function mark(j){document.querySelectorAll('#spots .loc[data-j]').forEach(b=>b.classList.toggle('on',+b.dataset.j===j));pinList.forEach((b,i)=>{b.classList.toggle('on',i===j);b._on=i===j})}
 function refreshSeen(){if(!sel)return;const n=seenCount(sel),t=sel.spots.length;
- $('sProg').innerHTML=n?`Đã xem <b>${n}/${t}</b> điểm tham quan${n===t?' · hoàn thành!':''}`:`${t} điểm tham quan · chạm số trên mô hình để bắt đầu`;
+ $('sProg').hidden=true;
  document.querySelectorAll('#spots .loc[data-j]').forEach(b=>b.classList.toggle('seen',!!seen[sel.id+'.'+b.dataset.j]));
  pinList.forEach((b,i)=>b.classList.toggle('seen',!!seen[sel.id+'.'+i]))}
 /* chỉ hiện nút khi địa điểm có link; chưa có link thì không hiện gì (link nhập ở trang Công nghệ số) */
@@ -1135,11 +1137,11 @@ function paintPanel(){$('pPh').innerHTML=curPanel?photoHTML(curPanel.o,curPanel.
 function syncHud(){$('hud').classList.toggle('spot',spotIdx>=0&&!$('panel').classList.contains('hide'))}
 /* thông tin nhanh về điểm đang xem (hiện ở khung bên phải) */
 function facts(){const s=sel,p=spotIdx>=0?s.spots[spotIdx]:null,r=[];
- if(p){r.push(['Thuộc',s.name]);r.push(['Vị trí',s.city]);r.push(['Thời kỳ',s.era.n+' ('+s.era.r+')']);if(s.unesco)r.push(['Danh hiệu',s.unesco]);r.push(['Tiến độ','Đã xem '+seenCount(s)+'/'+s.spots.length+' điểm của quần thể'])}
+ if(p){r.push(['Thuộc',s.name]);r.push(['Vị trí',s.city]);r.push(['Thời kỳ',s.era.n+' ('+s.era.r+')']);if(s.unesco)r.push(['Danh hiệu',s.unesco])}
  $('pF').innerHTML=r.map(([a,b])=>`<dt>${esc(a)}</dt><dd>${esc(b)}</dd>`).join('');$('pA2').hidden=!p}
 function panel(k,t,p,o,key,y){closePop();$('pK').textContent=k;$('pT').textContent=t;$('pP').textContent=p;$('pY').innerHTML=y?`<span class="tag">${esc(y)}</span>`:'';$('pY').style.display=y?'':'none';linkBox(o,key,$('pL'));curPanel={o,key,t};paintPanel();$('panel').classList.remove('hide');$('panel').scrollTop=0;facts();syncHud()}
 function info(){spotIdx=-1;auto=true;go(sel.cam);panel('Địa danh · '+sel.year,sel.name,sel.text,sel,sel.id);mark(-1);setHash(sel.id,true)}
-function spot(j,keep){const p=sel.spots[j];if(!p)return;if(!keep)stopTour();spotIdx=j;auto=false;markSeen(p.k);go([p.pos[0],p.pos[1],p.pos[2],p.r,p.th,p.ph]);
+function spot(j,keep){const p=sel.spots[j];if(!p)return;if(!keep)stopTour();spotIdx=j;auto=false;markSeen(p.k);go([p.pos[0],p.pos[1],p.pos[2],Math.min(125,p.r*1.5),p.th,p.ph]);
  panel('ĐIỂM '+String(j+1).padStart(2,'0')+' / '+String(sel.spots.length).padStart(2,'0')+' · '+sel.name,p.n,p.t,p,p.k,p.y);mark(j);refreshSeen();facts();setHash(sel.id+'.'+j,true);
  if(tour.on)tourWait(p)}
 function step(d){if(!sel)return;const n=sel.spots.length;spot(spotIdx<0?(d>0?0:n-1):(spotIdx+d+n)%n)}
