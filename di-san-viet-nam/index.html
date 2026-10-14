@@ -333,7 +333,7 @@ const SITES=[
  spots:[{n:'Tòa nhà chính',t:'Kiến trúc hiện đại pha chất Á Đông, được cho là gợi ý tưởng từ chữ “Cát” (吉); mặt tiền có các lam bê tông gợi hình tre trúc.',pos:[0,5,-4],r:30,th:.3,ph:1.2,link:''},
  {n:'Cổng Dinh & xe tăng 843, 390',t:'Trưa 30/4/1975, xe tăng của Quân giải phóng, trong đó có các xe số hiệu 843 và 390, tiến vào Dinh qua cổng phụ và cổng chính, đánh dấu thời khắc kết thúc chiến tranh. Cả hai xe sau này được công nhận là bảo vật quốc gia.',y:'30/4/1975',pos:[3,1.5,24],r:17,th:-.55,ph:1.15,link:'https://vi.wikipedia.org/wiki/Sự_kiện_30_tháng_4_năm_1975'},
  {n:'Vườn & đài phun nước',t:'Khuôn viên rộng với thảm cỏ và đài phun nước trung tâm trước tòa nhà chính.',pos:[0,2,12],r:22,th:-.5,ph:1.25,link:''},
- {n:'Hầm chỉ huy',t:'Dưới tòa nhà có hệ thống hầm kiên cố gồm hai tầng hầm, có phòng họp và trung tâm thông tin liên lạc (không thể hiện trong mô hình bề mặt).',pos:[0,2,-8],r:40,th:.9,ph:.95,link:''}]},
+ {n:'Hầm chỉ huy',t:'Dưới Dinh có hệ thống hầm kiên cố gồm hai tầng hầm, có phòng họp và trung tâm thông tin liên lạc. Trong mô hình, phía sau Dinh có một tấm kính trên mặt đất để nhìn xuống căn phòng hầm chỉ huy tượng trưng (bàn họp, bàn liên lạc, bản đồ); bố cục chỉ mang tính minh họa.',pos:[4,-4,-24],r:24,th:3.5,ph:.3,mk:[0,.5,-30.5],link:''}]},
 {id:'ha-long',name:'Vịnh Hạ Long',city:'Quảng Ninh',prov:'Quảng Ninh',reg:'Bắc',type:'tn',year:'UNESCO 1994',yn:1994,unesco:'Di sản thế giới 1994',ll:[20.91,107.18],bg:0xb4cdd0,
  text:'Vùng vịnh với hàng nghìn đảo đá vôi nhô lên từ mặt biển. UNESCO ghi danh năm 1994 vì giá trị thẩm mỹ, công nhận thêm giá trị địa chất, địa mạo năm 2000 và mở rộng sang quần đảo Cát Bà năm 2023.',
  link:'https://vi.wikipedia.org/wiki/Vịnh_Hạ_Long',cam:[0,2,-4,95,.4,1.05],
@@ -769,7 +769,25 @@ const BUILD={
  T(4,12,9,0x6f8a4d,14,0,-26,12);B(9,.8,9,0xcfc7b0,14,9,-26);B(5,5,3.2,0x9c9484,14,9.8,-26);B(3.2,6,2,0x8a6a3d,14,14.8,-26);C(.1,6,0xdddddd,15.7,14.8,-26,6);B(2.2,1.4,.08,0xcc2f23,16.8,19.2,-26);
  T(4,10,7,0x6f8a4d,-2,0,-38,12);T(3,9,6,0x6f8a4d,30,0,-30,12);T(3,8,5,0x6f8a4d,34,0,14,10);
  trees(26,24)},
-'dinh-doc-lap':()=>{ground(0x6f8f4a);B(60,.15,60,0xc9c5b5,0,0,0);
+'dinh-doc-lap':()=>{
+ /* nền khoét một hố sau Dinh để nhìn xuống phòng hầm chỉ huy qua tấm kính */
+ const GC=0x6f8f4a,SO=0x5b4328,PV=0xc9c5b5,hx=10,z0=-30,z1=-18;
+ for(const[w,d,x,z]of[[100,220,-60,0],[100,220,60,0],[2*hx,128,0,46],[2*hx,80,0,-70]]){B(w,9.6,d,SO,x,-10,z);B(w,.4,d,GC,x,-.4,z)}
+ for(const[w,d,x,z]of[[20,60,-20,0],[20,60,20,0],[2*hx,48,0,6]])B(w,.15,d,PV,x,0,z);
+ /* hầm: sàn dưới, tầng lửng, bàn họp, bàn liên lạc, bản đồ, thang (sáng, không đổ bóng để nhìn rõ từ trên) */
+ const cx=0,cz=-24,F=-6,n0=G.children.length;
+ B(2*hx,.3,12,0xd9d5c9,cx,F-.3,cz);B(2*hx-2,.3,3.2,0xb9ae94,cx,-2.6,-27.4);B(2*hx-2,.12,.3,0xb9b5a8,cx,-2.5,-25.7);
+ B(2*hx,5.6,.25,0xefe8d0,cx,F,-29.9);B(2*hx,5.6,.25,0xefe8d0,cx,F,-18.1);B(.25,5.6,12,0xe6dfc6,-hx+.1,F,cz);B(.25,5.6,12,0xe6dfc6,hx-.1,F,cz);
+ B(8,.3,2.6,0xa6783f,-3,F+1.3,cz+.5);for(const i of[-3,-1,1,3]){B(.8,.9,.7,0x4f6a8a,-3+i*1.1,F,cz-1.2);B(.8,.9,.7,0x4f6a8a,-3+i*1.1,F,cz+2.2)}B(7.6,.9,.2,0x8a6030,-3,F+.4,cz+.5);
+ B(5,1.1,1.6,0x66727e,6,F,-19.8);B(1.3,.9,.1,0x1f2a24,5,F+1.1,-19.3);B(1.3,.9,.1,0x1f2a24,7,F+1.1,-19.3);B(.4,.2,.4,0xe2b34a,6,F+1.1,-20.4);B(.5,.5,.5,0xc0392b,8.2,F,-20.1);
+ B(6.4,3,.12,0xfff6d8,-3,F+1.6,-18.4);B(5.6,2.4,.04,0x5d9a6a,-3,F+1.9,-18.5);B(.2,.2,.2,0xd24b3a,-4,F+2.4,-18.55);B(.2,.2,.2,0xd24b3a,-1.6,F+3,-18.55);
+ B(.15,.15,3.4,0xfff2b8,0,-2.5,-24).rotation.x=0;
+ B(.15,3.2,.15,0x8a8a80,-7.6,F,-28.4);B(.15,3.2,.15,0x8a8a80,-6.7,F,-28.4);for(let i=0;i<6;i++)B(.9,.08,.12,0x8a8a80,-7.15,F+.3+i*.5,-28.4);
+ for(const x of[-5,0,5])B(1.8,.2,.8,0xfff2b8,x,-2.1,cz+1);
+ for(let i=n0;i<G.children.length;i++){const o=G.children[i];o.castShadow=false;o.receiveShadow=false}
+ const gl=GH(2*hx-1.2,.3,11,0x9fdcee,.3,0,.05,cz);gl.castShadow=false;
+ for(const[w,d,x,z]of[[2*hx,.6,0,-18.3],[2*hx,.6,0,-29.7],[.6,12,-hx+.3,cz],[.6,12,hx-.3,cz]])B(w,.4,d,0x555e5a,x,0,z);
+
  B(34,3.2,13,0xe9e6dc,0,0,-6);B(30,3.2,11,0xdedad0,0,3.2,-6);B(24,3.2,10,0xe9e6dc,0,6.4,-6);B(16,2.6,8,0xdedad0,0,9.6,-6);B(18,.5,9,0x6f6f6a,0,12.2,-6);B(6,.4,6,0xb9b5a8,0,12.7,-6);
  for(let i=-8;i<=8;i++){B(.35,9.6,.35,0x555e5a,i*1.9,0,0)}for(let i=-6;i<=6;i++)B(.3,3.2,.3,0x555e5a,i*2,6.4,-.4);
  C(5,.5,0xc0c0b4,0,0,14,24);C(3.5,.8,WATER,0,.5,14,24);C(.4,2,0xd9d9d0,0,.8,14,8);
