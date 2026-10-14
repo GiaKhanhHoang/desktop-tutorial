@@ -285,11 +285,11 @@ const SITES=[
  {n:'Đàn tế Nam Giao',t:'Nằm dưới chân núi Đốn Sơn, cách Hoàng thành khoảng 2,5 km về phía đông nam; khảo cổ cho thấy nền đàn gồm năm tầng bó đá, tổng diện tích khoảng 30.000 m².',pos:[40,2,66],r:22,th:.6,ph:1.2,link:''}]},
 {id:'hoi-an',name:'Phố cổ Hội An',city:'Đà Nẵng (Quảng Nam cũ)',prov:'Đà Nẵng',reg:'Trung',type:'pho',year:'Thế kỷ XVI–XVII',yn:1550,unesco:'Di sản thế giới 1999',ll:[15.8801,108.338],bg:0xb7b79d,
  text:'Thương cảng quốc tế sầm uất, nơi người Việt, Hoa, Nhật giao thoa. UNESCO ghi danh năm 1999.',
- link:'https://vi.wikipedia.org/wiki/Phố_cổ_Hội_An',cam:[0,2,0,62,.4,1.1],
- spots:[{n:'Chùa Cầu',t:'Cầu mái ngói bắc qua lạch nước, do cộng đồng thương nhân Nhật góp tiền xây vào khoảng thế kỷ XVII nên còn gọi là cầu Nhật Bản. Cầu được dựng lại năm 1817 và đại trùng tu giai đoạn 2022–2024.',y:'Thế kỷ XVII',pos:[0,3,0],r:22,th:0,ph:1.2,link:'https://vi.wikipedia.org/wiki/Chùa_Cầu'},
- {n:'Dãy nhà phố cổ',t:'Những ngôi nhà ống gỗ, mái ngói âm dương san sát, vừa để ở vừa buôn bán.',pos:[-20,3,-14],r:26,th:-.3,ph:1.15,link:''},
- {n:'Hội quán Phúc Kiến',t:'Hội quán của cộng đồng người Hoa, nổi bật với cổng tam quan và mái ngói trang trí cầu kỳ.',pos:[-24,3,19],r:18,th:2.9,ph:1.2,link:''},
- {n:'Phố đèn lồng',t:'Hàng nghìn chiếc đèn lồng thắp sáng phố cổ vào đêm rằm (14 âm lịch hằng tháng; từ năm 1998 phố cổ tắt điện và dành cho người đi bộ), trở thành nét riêng của Hội An.',pos:[14,3,-10],r:22,th:-.5,ph:1.15,link:''}]},
+ link:'https://vi.wikipedia.org/wiki/Phố_cổ_Hội_An',cam:[10,2,-16,80,.5,1.1],
+ spots:[{n:'Chùa Cầu',t:'Cầu mái ngói bắc qua lạch nước, do cộng đồng thương nhân Nhật góp tiền xây vào khoảng thế kỷ XVII nên còn gọi là cầu Nhật Bản. Cầu được dựng lại năm 1817 và đại trùng tu giai đoạn 2022–2024.',y:'Thế kỷ XVII',pos:[28,3,-44],r:24,th:1.35,ph:1.1,link:'https://vi.wikipedia.org/wiki/Chùa_Cầu'},
+ {n:'Dãy nhà phố cổ',t:'Những ngôi nhà ống gỗ, mái ngói âm dương san sát, vừa để ở vừa buôn bán.',pos:[-34,3,-14],r:26,th:-.3,ph:1.15,link:''},
+ {n:'Hội quán Phúc Kiến',t:'Hội quán của cộng đồng người Hoa, nổi bật với cổng tam quan và mái ngói trang trí cầu kỳ.',pos:[-24,3,20],r:18,th:3.4,ph:1.2,link:''},
+ {n:'Phố đèn lồng',t:'Hàng nghìn chiếc đèn lồng thắp sáng phố cổ vào đêm rằm (14 âm lịch hằng tháng; từ năm 1998 phố cổ tắt điện và dành cho người đi bộ), trở thành nét riêng của Hội An.',pos:[-6,3,2],r:24,th:.7,ph:1.15,link:''}]},
 {id:'hue',name:'Quần thể Cố đô Huế',city:'Huế',prov:'Huế',reg:'Trung',type:'thanh',year:'1805',yn:1805,unesco:'Di sản thế giới 1993',ll:[16.4698,107.5786],bg:0xa8b3a5,
  text:'Kinh đô của nhà Nguyễn (1802–1945). Kinh thành Huế được khởi công năm 1805. UNESCO ghi danh năm 1993.',
  link:'https://vi.wikipedia.org/wiki/Quần_thể_di_tích_Cố_đô_Huế',cam:[0,3,0,60,.5,1.1],
@@ -710,21 +710,33 @@ const BUILD={
  T(2,16,22,0x587a45,56,0,76,9);T(1,30,30,0x587a45,-70,0,-60,9);T(1,26,26,0x4d6b43,70,0,-50,9);T(1,34,34,0x587a45,0,0,-90,9);
  trees(16,52)},
 'hoi-an':()=>{ground(0x8fa468,0);
- /* sông Hoài uốn nhẹ ở giữa phố cổ: c(x) là tim sông, nhà hai bên, Chùa Cầu bắc ngang ở x=0 */
- const c=x=>3.5*(1-Math.cos(x/20)),sl=x=>Math.atan(3.5/20*Math.sin(x/20)),HW=7.5;
- for(let x=-72;x<=72;x+=9){const o=B(10.5,.14,2*HW,WATER,x,0,c(x));o.rotation.y=-sl(x);
-  for(const sg of[-1,1]){const q=B(10.5,.55,1.1,0x9a8f78,x,0,c(x)+sg*(HW+.4));q.rotation.y=-sl(x);const r=B(10.5,.04,5,0xcfbf98,x,0,c(x)+sg*(HW+3.6));r.rotation.y=-sl(x)}}
- const HC=[0xe3b640,0xd8a94a,0xe8c75f,0xcf9a3c,0xdcc58a,0xe0a93e],RC=[0x7a3b2a,0x6a4a3a,0x8a4a2a];
- for(const sg of[-1,1])for(let i=-8;i<=8;i++){const x=i*7.2+(sg>0?0:3.4);if(Math.abs(x)<7.5)continue;if(sg>0&&Math.abs(x+24)<8)continue;
-  const z=c(x)+sg*17,h=4.2+((i+9)%3)*.7,col=HC[(i+9+(sg>0?2:0))%6];
-  B(5.8,h,6.6,col,x,0,z);R(6.9,7.7,2.2,RC[(i+9)%3],x,h,z);
-  B(1.3,2.5,.2,0x5a3a22,x,0,z-3.4*sg);for(const dx of[-1.9,1.9])B(.9,1.3,.2,0x3f6a4a,x+dx,1.5,z-3.4*sg);
-  B(5,.16,.9,0x6a4a2d,x,h-.6,z-3.7*sg);B(1,1.3,.2,0x3f6a4a,x-1.6,h-1.9,z-3.4*sg);B(1,1.3,.2,0x3f6a4a,x+1.6,h-1.9,z-3.4*sg)}
- /* đèn lồng dọc hai bờ */
- for(const sg of[-1,1])for(let x=-60;x<=60;x+=5.2){if(Math.abs(x)<7)continue;const z=c(x)+sg*(HW+1.4);C(.06,3,0x3a3a3a,x,0,z,5);S(.3,((x/5.2|0)&1)?0xcc2f23:0xe8a21d,x,3.1,z).scale.set(1,1.25,1)}
- for(let x=-50;x<=50;x+=10)for(const sg of[-1,1])if(Math.abs(x)>8)tree(x+3,c(x+3)+sg*(HW+4.2));
- boat(-34,c(-34)+1,-sl(-34));boat(-14,c(-14)-2.5,-sl(-14)+.1,0x2f5a6b);boat(16,c(16)+2,-sl(16)-.1,0x7a3b2a);boat(30,c(30)-1,-sl(30),0x6b4a2d);boat(46,c(46)+1.5,-sl(46)+.1,0x2f5a6b);
- /* ---- Chùa Cầu: cầu mái ngói, trụ đá có vòm, lan can gỗ, cột đỏ nâu, mái hai tầng, đèn lồng đỏ ---- */
+ /* sông Hoài: đoạn chính chạy ngang (phố đèn lồng), rồi rẽ trái lên phía bắc; Chùa Cầu bắc qua đoạn rẽ */
+ const HW=7.5,P=[],fz=x=>2.2*Math.sin(x/15)*Math.max(0,Math.min(1,(10-x)/12)),BX=28,BZ=-44,R0=14;
+ for(let x=-76;x<14;x+=1)P.push([x,fz(x)]);
+ for(let t=0;t<Math.PI/2;t+=.06)P.push([14+R0*Math.sin(t),-R0+R0*Math.cos(t)]);
+ for(let z=-14;z>=-92;z-=1)P.push([BX,z]);
+ const ang=i=>{const a=P[Math.max(0,i-1)],b=P[Math.min(P.length-1,i+1)];return Math.atan2(b[1]-a[1],b[0]-a[0])};
+ const xf=(n0,th,tx,tz)=>{const R=new THREE.Matrix4();for(let i=n0;i<G.children.length;i++){const o=G.children[i];o.updateMatrix();R.makeRotationY(th).setPosition(tx,0,tz).multiply(o.matrix);R.decompose(o.position,o.quaternion,o.scale)}};
+ const dPath=(x,z)=>{let m=1e9;for(let i=0;i<P.length;i+=2){const d=Math.hypot(P[i][0]-x,P[i][1]-z);if(d<m)m=d}return m};
+ for(let i=0;i<P.length;i+=4){const a=ang(i),[x,z]=P[i],px=-Math.sin(a),pz=Math.cos(a);
+  const w=B(7.4,.14,2*HW,WATER,x,0,z);w.rotation.y=-a;
+  for(const sg of[-1,1]){const q=B(7.4,.55,1.1,0x9a8f78,x+px*sg*(HW+.4),0,z+pz*sg*(HW+.4));q.rotation.y=-a;const r=B(7.4,.04,5,0xcfbf98,x+px*sg*(HW+3.6),0,z+pz*sg*(HW+3.6));r.rotation.y=-a}}
+ /* nhà phố cổ hai bên bờ: chỉ đặt nơi cách sông đủ xa và không đè lên nhau */
+ const HC=[0xe3b640,0xd8a94a,0xe8c75f,0xcf9a3c,0xdcc58a,0xe0a93e],RC=[0x7a3b2a,0x6a4a3a,0x8a4a2a],placed=[];
+ const HQ=[-24,fz(-24)+HW+15];let hn=0;
+ for(let i=0;i<P.length;i+=7)for(const sg of[-1,1]){const a=ang(i),[x,z]=P[i],hxp=x-Math.sin(a)*sg*17,hzp=z+Math.cos(a)*sg*17;
+  if(dPath(hxp,hzp)<15.5||(Math.abs(hzp-BZ)<10.5&&Math.abs(hxp-BX)<34)||Math.hypot(hxp-HQ[0],hzp-HQ[1])<10||Math.abs(hxp)>70||hzp<-86)continue;
+  if(placed.some(q=>Math.hypot(q[0]-hxp,q[1]-hzp)<6.6))continue;placed.push([hxp,hzp]);
+  const h=4.2+(hn%3)*.7,col=HC[hn%6],rc=RC[hn%3],n0=G.children.length;hn++;
+  B(5.8,h,6.6,col,0,0,0);R(6.9,7.7,2.2,rc,0,h,0);B(1.3,2.5,.2,0x5a3a22,0,0,-3.4);for(const dx of[-1.9,1.9])B(.9,1.3,.2,0x3f6a4a,dx,1.5,-3.4);
+  B(5,.16,.9,0x6a4a2d,0,h-.6,-3.7);for(const dx of[-1.6,1.6])B(1,1.3,.2,0x3f6a4a,dx,h-1.9,-3.4);
+  xf(n0,sg>0?-a:Math.PI-a,hxp,hzp)}
+ /* đèn lồng dọc hai bờ đoạn sông chính */
+ for(let i=0;i<P.length;i+=5){const[x,z]=P[i];if(x<-62||x>8)continue;const a=ang(i);for(const sg of[-1,1]){const lx=x-Math.sin(a)*sg*(HW+1.4),lz=z+Math.cos(a)*sg*(HW+1.4);C(.06,3,0x3a3a3a,lx,0,lz,5);S(.3,(i/5&1)?0xcc2f23:0xe8a21d,lx,3.1,lz).scale.set(1,1.25,1)}}
+ for(let i=6;i<P.length;i+=13)for(const sg of[-1,1]){const a=ang(i),[x,z]=P[i],tx=x-Math.sin(a)*sg*(HW+4.2),tz=z+Math.cos(a)*sg*(HW+4.2);if(!(Math.abs(tz-BZ)<10.5&&Math.abs(tx-BX)<34)&&Math.hypot(tx-HQ[0],tz-HQ[1])>10)tree(tx,tz)}
+ for(const[i,o,c]of[[18,1,0x6b4a2d],[40,-2.5,0x2f5a6b],[66,2,0x7a3b2a],[88,-1,0x6b4a2d],[130,1.5,0x2f5a6b],[160,-1,0x7a3b2a],[185,1,0x6b4a2d]]){const a=ang(i),p=P[i];if(p)boat(p[0]-Math.sin(a)*o,p[1]+Math.cos(a)*o,-a,c)}
+ /* ---- Chùa Cầu (dựng ở gốc tọa độ rồi xoay vào đoạn sông rẽ) ---- */
+ const nb=G.children.length;
  const WD=0x7a3b2a,WD2=0x5a3a22,STN=0x9a8f78;
  for(const sz of[-1,1]){B(5.6,2.4,3.8,STN,0,0,sz*8);B(6,.3,4.2,0xb6ab92,0,2.4,sz*8);
   for(const[w,h,x]of[[1.2,1.8,-1.9],[1.7,2.1,0],[1.2,1.8,1.9]])AR(w,h,.3,0x2a241e,x,0,sz*9.95);
@@ -738,8 +750,9 @@ const BUILD={
  for(const sz of[-1,1]){B(5.2,2.2,.3,0xc79b4a,0,3.4,sz*9.9);B(2.6,.7,.18,0x2f5a4f,0,5.1,sz*10.1);B(2.8,.14,.2,GOLD,0,5.8,sz*10.1);B(.4,1.1,.4,GOLD,0,8,sz*10.2);
   for(const x of[-1.4,0,1.4]){C(.03,.6,0x3a3a3a,x,5.4,sz*10.3,4);S(.34,0xcc2f23,x,5.1,sz*10.3).scale.set(1,1.25,1)}}
  B(3.4,2.4,3.4,WD,3.9,2.7,0);R(4.6,4.6,1.7,0x8a4a2a,3.9,5.1,0);
- /* ---- Hội quán Phúc Kiến trên bờ nam ---- */
- B(10,.5,10,DSTONE,-24,0,21);B(7,3.5,7,RED,-24,.5,21);R(11,11,3,0x7a3b2a,-24,4,21);B(8,.3,.6,GOLD,-24,3.6,24.5);gate(-24,12.2,.8);bush(-29,12.4);bush(-19,12.4);
+ xf(nb,Math.PI/2,BX,BZ);
+ /* ---- Hội quán Phúc Kiến trên bờ nam đoạn sông chính ---- */
+ {const gz=HQ[1]-9,cx=HQ[0];B(10,.5,10,DSTONE,cx,0,HQ[1]);B(7,3.5,7,RED,cx,.5,HQ[1]);R(11,11,3,0x7a3b2a,cx,4,HQ[1]);B(8,.3,.6,GOLD,cx,3.6,HQ[1]-3.5);gate(cx,gz,.8);bush(cx-5,gz+.2);bush(cx+5,gz+.2)}
  trees(8,52)},
 'hue':()=>{ground(0x6a7d50);B(80,.2,70,0xb4a78a,0,0,0);B(100,.15,6,WATER,0,0,43);
  for(let i=-3;i<=3;i++)B(1,3,4,WALL,i*14,0,-34);walls(80,70,4,0xc9b78a);
@@ -825,7 +838,26 @@ const BUILD={
  for(let i=-8;i<=8;i++){B(.35,9.6,.35,0x555e5a,i*1.9,0,0)}for(let i=-6;i<=6;i++)B(.3,3.2,.3,0x555e5a,i*2,6.4,-.4);
  C(5,.5,0xc0c0b4,0,0,14,24);C(3.5,.8,WATER,0,.5,14,24);C(.4,2,0xd9d9d0,0,.8,14,8);
  for(const x of[-14,14]){B(3,.3,3,0xaaa59a,x,0,16);}
- B(1,2,1,0x3a3a35,-8,0,29);B(1,2,1,0x3a3a35,8,0,29);B(15,.2,.2,0x3a3a35,0,1.6,29);
+ /* hàng rào sắt và cổng Dinh như ngoài đời: thanh sắt đứng, đế thấp, trụ cổng cao có đèn, cánh cổng mở, vòm hoa sắt, chòi gác, nền lát đá */
+ {const FC=0xd2d6d8,BASE=0xe6dcc2,zf=29.5,zb=-31,xs=29.5,gl=-6.4,gr=9.6;
+  const run=(x0,z0,x1,z1)=>{const L=Math.hypot(x1-x0,z1-z0),n=Math.round(L/1.1),ax=Math.abs(x1-x0)>Math.abs(z1-z0);
+   for(let i=0;i<=n;i++){const x=x0+(x1-x0)*i/n,z=z0+(z1-z0)*i/n;B(.1,2.8,.1,FC,x,.5,z);if(i%4===0)B(.22,3.1,.22,FC,x,.5,z)}
+   const cx=(x0+x1)/2,cz=(z0+z1)/2;for(const y of[.7,3.0]){ax?B(L,.12,.12,FC,cx,y,cz):B(.12,.12,L,FC,cx,y,cz)}ax?B(L,.5,.5,BASE,cx,0,cz):B(.5,.5,L,BASE,cx,0,cz)};
+  run(-xs,zf,gl-.4,zf);run(gr+.4,zf,xs,zf);run(-xs,zb,xs,zb);run(-xs,zb,-xs,zf);run(xs,zb,xs,zf);
+  for(const x of[gl,1.6,gr]){B(.9,4.4,.9,FC,x,0,zf);B(1.1,.4,1.1,0xbfc4c6,x,4.4,zf);B(.7,.1,.7,0xbfc4c6,x,0,zf);S(.45,0xfff6dc,x,5.3,zf);C(.1,.5,0x9aa0a4,x,4.8,zf,6)}
+  /* cánh phải đóng + vòm hoa sắt phía trên */
+  for(let x=1.9;x<gr-.3;x+=.5)B(.07,3.6,.07,FC,x,.4,zf);B(gr-1.6-.3,.12,.12,FC,(1.6+gr)/2,.8,zf);B(gr-1.6-.3,.12,.12,FC,(1.6+gr)/2,3.9,zf);
+  {const t=add(new THREE.Mesh(new THREE.TorusGeometry(3.6,.07,6,24,Math.PI),mat(FC)),(1.6+gr)/2,4.0,zf);t.scale.set(1,.5,1);const t2=add(new THREE.Mesh(new THREE.TorusGeometry(2.4,.06,6,20,Math.PI),mat(FC)),(1.6+gr)/2,4.0,zf);t2.scale.set(1,.45,1);C(.05,1.3,FC,(1.6+gr)/2,5.7,zf,5);S(.18,0xe6c45f,(1.6+gr)/2,7.1,zf)}
+  /* cánh trái mở: bản lề ở trụ gl, quay vào trong sân */
+  for(let k=0;k<=7;k++){const t=k*.5,x=gl+.5+t*.34,z=zf-.5-t*.94;B(.07,3.4,.07,FC,x,.4,z)}
+  {const p=B(.12,.12,3.8,FC,gl+.85,.8,zf-1.9);p.rotation.y=-.35;const q=B(.12,.12,3.8,FC,gl+.85,3.5,zf-1.9);q.rotation.y=-.35}
+  /* chòi gác bên ngoài cổng */
+  B(4,.25,3.2,0xc3c8ca,-13,3.3,zf+3);B(3.2,1.1,2.4,0xe6dcc2,-13,0,zf+3);GH(3.2,2.2,2.4,0xcfe6ee,.3,-13,1.1,zf+3);for(const dx of[-1.5,1.5])for(const dz of[-1.1,1.1])B(.12,2.2,.12,0x8a9094,-13+dx,1.1,zf+3+dz);
+  B(.7,1.7,.5,0x4a5a2f,-13.8,1.1,zf+3);S(.28,0xd9a27e,-13.8,3,zf+3);B(.5,.15,.5,0x3f4a2a,-13.8,3.15,zf+3);
+  /* nền đá lát trước cổng + đường + cây cắt tỉa */
+  B(15,.06,6,0xa7857a,-.4,0,zf+3);B(70,.04,9,0x55595c,0,0,zf+9.5);
+  for(const x of[-9.8,12]){S(.9,0x3f7a3a,x,.9,zf+1.4);S(.75,0x4a8a43,x,1.9,zf+1.4);S(.55,0x56984c,x,2.7,zf+1.4);C(.12,1.6,0x5a4028,x,.3,zf+1.4,5)}
+  B(2,1,1,0x2f5a2f,gl-1.5,0,zf-1)}
  B(2.4,1,3.6,0x56653f,3,0,22);B(1.4,.7,1.8,0x56653f,3,1,22.2);C(.15,2,0x56653f,3,1.1,24,6).rotation.x=Math.PI/2;
  C(.12,18,0xdddddd,-16,0,6,6);B(3,1.8,.1,0xcc2f23,-14.5,15.5,6);
  for(const[x,z]of[[-20,14],[20,14],[-12,26],[12,26],[-24,0],[24,0]])palm(x,z,0,7);for(const[x,z,c]of[[-8.5,18,0xd24b6a],[8.5,18,0xd24b6a],[-8.5,10,0xf0c23a],[8.5,10,0xf0c23a]])B(3.2,.3,1.2,c,x,0,z);
