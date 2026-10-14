@@ -177,7 +177,7 @@ figure.ph figcaption{font-size:10px;line-height:1.5;color:var(--dim);padding:5px
 <div id="pins"></div>
 <div class="panel hide" id="panel"><button class="x" id="pX" type="button" aria-label="Đóng thông tin">×</button><small id="pK"></small><h2 id="pT"></h2><div class="tags" id="pY"></div><p id="pP"></p><dl class="facts" id="pF"></dl><div id="pL"></div>
 <div class="acts"><button class="btn ghost sm" id="pPrev" type="button">‹ Trước</button><button class="btn ghost sm" id="pNext" type="button">Sau ›</button></div>
-<div class="acts" id="pA2"><button class="btn ghost sm" id="pInfo" type="button">Nội dung quần thể</button><button class="btn ghost sm" id="pMore" type="button">Xem thêm</button><button class="btn ghost sm" id="pQuiz" type="button">Đố vui</button></div><div id="pPh"></div></div>
+<div class="acts" id="pA2"><button class="btn ghost sm" id="pQuiz" type="button">Đố vui</button></div><div id="pPh"></div></div>
 <div class="bottom" id="spots"></div></div>
 <div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="mTitle"><div class="sheet"><div class="mhead"><div><div class="eyebrow" id="mEye"></div><h2 id="mTitle"></h2></div><button class="mx" id="mX" type="button" aria-label="Đóng">×</button></div>
 <div class="tabs" role="tablist"><button type="button" role="tab" id="tabN" data-t="n" aria-selected="true">Nội dung</button><button type="button" role="tab" id="tabM" data-t="m" aria-selected="false">Xem thêm</button></div><div class="mbody" id="mBody" tabindex="0"></div></div></div>
@@ -744,6 +744,7 @@ const BUILD={
  B(32,10,16,0xaaa596,0,1.4,-32);B(34,.8,18,0x6a6860,0,11.4,-32);B(26,3.6,12,0xb9b4a6,0,12.2,-32);B(28,.5,14,0x6a6860,0,15.8,-32);
  for(let i=0;i<12;i++)B(.9,10,.9,0xcfc9b8,-14.4+i*2.62,1.4,-23.4);B(10,1.3,.3,0xc8352a,0,9.6,-23.9);
  B(12,.14,12,WATER,46,0,-14);C(.8,3.4,DSTONE,46,.1,-14,10);B(3.6,.4,3.6,DSTONE,46,3.5,-14);B(2.8,1.6,2.8,RED,46,3.9,-14);R(4.4,4.4,1.6,ROOF,46,5.5,-14);
+ for(let i=0;i<7;i++){B(2.2,.5+i*.5,.5,DSTONE,46,.1,-9.4-i*.45);}B(3.2,.3,1.4,DSTONE,46,0,-8.4);for(const sx of[-1.2,1.2])for(let i=0;i<7;i++)B(.16,.5,.5,0x8a7a63,46+sx,.5+i*.5+.1,-9.4-i*.45);
  for(const[dx,dz]of[[-3,-2],[3,-2],[-3,2],[3,2]])C(.25,2,0x6f5434,-46+dx,0,-4+dz,6);B(8,.3,5.6,0x6f5434,-46,2,-4);B(6.6,2.6,4.4,0x8a6a3d,-46,2.3,-4);R(8.4,6,1.8,0x5b4a35,-46,4.9,-4);B(10,.1,8,WATER,-46,0,6);
  B(22,6.4,11,0xe3bf55,-46,0,-24);B(23,.5,12,0xf2ead2,-46,6.4,-24);GBX(24,13,3.4,0x7a3b2a,-46,6.9,-24);for(let i=-4;i<=4;i++)B(1.3,2.6,.2,0x2f5a4f,-46+i*2.4,1.6,-18.4);
  lotus(46,-14,6,3.2);lotus(-46,6,5,3);
@@ -1117,8 +1118,8 @@ function openSite(s,j=-1){if(view!=='site')from=view;view='site';sel=s;spotIdx=-
  $('sbox').classList.remove('open');$('sMore').textContent='Liên quan ▾';$('sMore').setAttribute('aria-expanded','false');$('sEye').textContent=s.city+' · '+s.year;$('sName').textContent=s.name;$('sDesc').textContent=s.text;
  $('back').textContent='← '+(BACKLBL[from]||'Địa điểm');
  $('sTags').innerHTML=`<button class="tag" type="button" data-a="reg">${REG[s.reg]}</button><button class="tag" type="button" data-a="map">${esc(s.prov)}</button><button class="tag" type="button" data-a="type" style="--c:${TYPES[s.type].c}"><i></i>${esc(TYPES[s.type].n)}</button><button class="tag" type="button" data-a="era">${esc(s.era.n)}</button>${s.unesco?`<button class="tag u" type="button" data-a="un">${esc(s.unesco)}</button>`:''}`;
- const ord=[...SITES].sort((a,b)=>a.yn-b.yn),k=ord.indexOf(s),pv=ord[k-1],nx=ord[k+1];
- $('sNav').innerHTML=(pv?`<button type="button" data-site="${pv.id}">‹ ${esc(pv.name)} · ${esc(pv.year)}</button>`:'')+(nx?`<button type="button" data-site="${nx.id}">${esc(nx.name)} · ${esc(nx.year)} ›</button>`:'')+`<button type="button" data-a="tl">Xem trên dòng thời gian</button><button type="button" data-a="map">Xem trên bản đồ</button>`;
+ 
+ $('sNav').innerHTML=`<button type="button" data-a="tl">Xem trên dòng thời gian</button><button type="button" data-a="map">Xem trên bản đồ</button>`;
  $('spots').innerHTML=`<button class="loc tour" id="tourBtn" type="button">▶ TỰ ĐỘNG</button>`+s.spots.map((p,i)=>`<button class="loc" type="button" data-j="${i}">${String(i+1).padStart(2,'0')} · ${esc(p.n.toUpperCase())}</button>`).join('')+`<button class="loc" id="siteInfo" type="button">TỔNG QUAN</button>`;
  $('pins').innerHTML='';pinList.length=0;pinPos.length=0;
  s.spots.forEach((p,i)=>{const b=document.createElement('button');b.className='pin';b.type='button';b.textContent=i+1;b.setAttribute('aria-label','Điểm '+(i+1)+': '+p.n);b.title=p.n;b.dataset.n=p.n;b.onclick=()=>spot(i);b.hidden=true;$('pins').appendChild(b);pinList.push(b);pinPos.push(p.mk||[p.pos[0],p.pos[1]+4,p.pos[2]])});
@@ -1257,7 +1258,7 @@ $('sMore').onclick=()=>{const o=$('sbox').classList.toggle('open');$('sMore').te
 $('bInfo').onclick=()=>{if(sel)openModal(sel,'n')};
 $('bMore').onclick=()=>{if(sel)openModal(sel,'m')};
 $('pX').onclick=()=>{$('panel').classList.add('hide');if(spotIdx>=0)stopTour();syncHud()};
-$('pInfo').onclick=()=>{if(sel)openModal(sel,'n')};$('pMore').onclick=()=>{if(sel)openModal(sel,'m')};$('pQuiz').onclick=()=>{if(sel){const k='site:'+sel.id;show('quiz');quizMode(k)}};
+$('pQuiz').onclick=()=>{if(sel){const k='site:'+sel.id;show('quiz');quizMode(k)}};
 $('pPrev').onclick=()=>step(-1);$('pNext').onclick=()=>step(1);
 $('spots').onclick=e=>{const b=e.target.closest('button');if(!b)return;if(b.id==='tourBtn'){tour.on?stopTour():startTour()}else if(b.id==='siteInfo'){stopTour();info()}else if(b.dataset.j!==undefined)spot(+b.dataset.j)};
 $('sTags').onclick=$('sNav').onclick=e=>{const b=e.target.closest('button');if(!b)return;
