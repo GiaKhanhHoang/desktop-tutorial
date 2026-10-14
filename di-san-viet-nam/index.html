@@ -1033,27 +1033,26 @@ function renderMap(){
  $('view').innerHTML=`<div class="wrap"><div class="eyebrow">Theo vị trí</div><h1>Di sản trên dải đất <em>hình chữ S</em></h1><p class="lead">Vị trí các địa điểm trên bản đồ đơn giản của Việt Nam. Chạm vào một điểm để xem địa điểm ở đó, rồi vào tham quan 3D.</p>
  <div class="mapwrap"><div class="map" id="mapBox"></div><div class="mlist" id="mlist"></div></div></div>`;
  drawMap();mapList()}
-function renderTech(){
- const done=['Mô hình 3D tương tác của 15 địa điểm: xoay – zoom (cả cảm ứng hai ngón), các số kèm tên gắn trên từng di tích nhỏ bám mượt theo góc nhìn.','Mục “Nội dung” (lịch sử sơ bộ, mốc thời gian) và “Xem thêm” (liên kết Wikipedia, UNESCO, báo chí) cho từng địa điểm.','Ảnh thật của di tích, tự lấy từ Wikipedia / Wikimedia Commons khi có kết nối Internet, hoặc ảnh do người biên soạn thêm; luôn kèm nguồn nếu lấy từ Wikipedia.','Trang “Đố vui”: câu hỏi dựa trên nội dung đã xem, có giải thích và liên kết quay lại nơi chứa đáp án.','Bản đồ đơn giản của Việt Nam (gom cụm), dòng thời gian theo thời kỳ, giao diện sáng / tối.','Chế độ tham quan tự động đi lần lượt qua từng điểm.','Trang “Liên kết” để người biên soạn tự điền link thông tin, ảnh và nội dung trang “Ý nghĩa”, lưu ngay trên trình duyệt.'];
- $('view').innerHTML=`<div class="wrap"><div class="eyebrow">Công nghệ số</div><h1>Công nghệ <em>kể chuyện</em> di sản</h1>
- <p class="lead">Những công nghệ đã được áp dụng trong trang web này để người xem tiếp cận di tích mà không cần có mặt tại chỗ.</p>
- <ul class="tech">${done.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`}
 /* ===== TRANG "LIÊN KẾT": nội dung trang Ý nghĩa + link thông tin + link ảnh ===== */
 const FMT={h:['# ','Đầu mục'],b:['**','In đậm'],u:[null,'IN HOA'],l:['- ','Gạch đầu dòng']};
+function edBox(k,title,hint){const c=CT[k];
+ return `<h2 class="sec" style="margin-top:6px">${title}</h2><p class="hp">${hint} Chọn chữ rồi bấm nút để định dạng; nội dung được lưu tự động trên trình duyệt này.</p>
+ <div class="atb" role="toolbar" aria-label="Định dạng"><button type="button" class="btn ghost sm" data-fmt="h" data-ed="${k}" title="Biến dòng đang đứng thành đầu mục (in đậm, in hoa)"><b>ĐẦU MỤC</b></button><button type="button" class="btn ghost sm" data-fmt="b" data-ed="${k}" title="In đậm chữ đang chọn"><b>In đậm</b></button><button type="button" class="btn ghost sm" data-fmt="u" data-ed="${k}" title="Chuyển chữ đang chọn thành IN HOA">IN HOA</button><button type="button" class="btn ghost sm" data-fmt="l" data-ed="${k}" title="Gạch đầu dòng">• Gạch đầu dòng</button><button type="button" class="btn ghost sm" data-fmt="copy" data-ed="${k}">Sao chép</button><button type="button" class="btn ghost sm" data-fmt="clear" data-ed="${k}">Xóa hết</button><button type="button" class="btn ghost sm" data-fmt="reset" data-ed="${k}" title="Quay về nội dung mẫu ban đầu">Về mẫu</button><span class="st" id="${c.sid}"></span></div>
+ <textarea id="${c.bid}" data-ed="${k}" class="abox" spellcheck="false" placeholder="Ví dụ:&#10;# Đầu mục&#10;Đoạn văn có **chữ in đậm**&#10;- Ý thứ nhất&#10;- Ý thứ hai">${esc(c.val)}</textarea>
+ <h3 class="sec" style="font-size:14px;margin-top:14px">Xem trước</h3><div class="abody aprev" id="${c.pid}">${aboutHTML(c.val)}</div>`}
 function renderLinks(){
  if(!EDIT){show('places');return}
  $('view').innerHTML=`<div class="wrap"><div class="eyebrow">Dành cho người biên soạn</div><h1>Liên kết</h1>
- <h2 class="sec" style="margin-top:6px">Nội dung trang “Ý nghĩa”</h2>
- <p class="hp">Điền nội dung vào hộp dưới đây, trang “Ý nghĩa” sẽ hiện đúng nội dung này (để trống thì trang để trống). Chọn chữ rồi bấm nút để định dạng; nội dung được lưu tự động trên trình duyệt này.</p>
- <div class="atb" role="toolbar" aria-label="Định dạng"><button type="button" class="btn ghost sm" data-fmt="h" title="Biến dòng đang đứng thành đầu mục (in đậm, in hoa)"><b>ĐẦU MỤC</b></button><button type="button" class="btn ghost sm" data-fmt="b" title="In đậm chữ đang chọn"><b>In đậm</b></button><button type="button" class="btn ghost sm" data-fmt="u" title="Chuyển chữ đang chọn thành IN HOA">IN HOA</button><button type="button" class="btn ghost sm" data-fmt="l" title="Gạch đầu dòng">• Gạch đầu dòng</button><button type="button" class="btn ghost sm" data-fmt="copy">Sao chép</button><button type="button" class="btn ghost sm" data-fmt="clear">Xóa hết</button><span class="st" id="aSt"></span></div>
- <textarea id="aBody" class="abox" spellcheck="false" placeholder="Ví dụ:&#10;# Ý nghĩa&#10;Công nghệ số giúp ... **in đậm** ...&#10;- Ý thứ nhất&#10;- Ý thứ hai">${esc(aboutText)}</textarea>
- <h3 class="sec" style="font-size:14px;margin-top:14px">Xem trước</h3><div class="abody aprev" id="aPrev"></div>
+ ${edBox('about','Nội dung trang “Ý nghĩa”','Điền nội dung vào hộp dưới đây, trang “Ý nghĩa” sẽ hiện đúng nội dung này.')}
+ <div style="height:26px"></div>
+ ${edBox('tech','Nội dung trang “Công nghệ số”','Điền nội dung vào hộp dưới đây, trang “Công nghệ số” sẽ hiện đúng nội dung này.')}
  ${mgrHTML()}</div>`;
- $('aPrev').innerHTML=aboutHTML(aboutText);mgrBind();imgMgrBind()}
-function aboutSave(){aboutText=$('aBody').value;const ok=ls.set('dsvn.aboutc',aboutText),s=$('aSt');if(s)s.textContent=ok?'Đã lưu':'Không lưu được (trình duyệt chặn) – hãy sao chép nội dung';const pv=$('aPrev');if(pv)pv.innerHTML=aboutHTML(aboutText)}
-function aboutFmt(k){const t=$('aBody');if(!t)return;
+ mgrBind();imgMgrBind()}
+function edSave(k){const c=CT[k],t=$(c.bid);if(!t)return;c.val=t.value;const ok=ls.set(c.key,c.val),s=$(c.sid);if(s)s.textContent=ok?'Đã lưu':'Không lưu được (trình duyệt chặn) – hãy sao chép nội dung';const pv=$(c.pid);if(pv)pv.innerHTML=aboutHTML(c.val)}
+function edFmt(k,id){const c=CT[id],t=c&&$(c.bid);if(!t)return;
  if(k==='copy'){copyText(t.value,'Đã sao chép nội dung');return}
- if(k==='clear'){armOnce('about-clear','Bấm “Xóa hết” lần nữa để xóa toàn bộ nội dung.',()=>{t.value='';aboutSave()});return}
+ if(k==='clear'){armOnce('clear-'+id,'Bấm “Xóa hết” lần nữa để xóa toàn bộ nội dung.',()=>{t.value='';edSave(id)});return}
+ if(k==='reset'){armOnce('reset-'+id,'Bấm “Về mẫu” lần nữa để thay nội dung bằng bản mẫu ban đầu (nội dung đã sửa sẽ mất).',()=>{t.value=c.def;edSave(id)});return}
  let s=t.selectionStart,e=t.selectionEnd,v=t.value;
  const ls0=v.lastIndexOf('\n',s-1)+1;let le=v.indexOf('\n',e);if(le<0)le=v.length;
  if(k==='h'||k==='l'){const pre=FMT[k][0],lines=v.slice(ls0,le).split('\n'),had=lines.every(x=>x.trim().startsWith(pre.trim()));
@@ -1061,7 +1060,7 @@ function aboutFmt(k){const t=$('aBody');if(!t)return;
   t.value=v.slice(0,ls0)+blk+v.slice(le);t.setSelectionRange(ls0,ls0+blk.length)}
  else if(k==='b'){if(s===e){toast('Hãy chọn đoạn chữ cần in đậm trước.');return}const sel=v.slice(s,e),w=/^\*\*[\s\S]*\*\*$/.test(sel)?sel.slice(2,-2):'**'+sel+'**';t.value=v.slice(0,s)+w+v.slice(e);t.setSelectionRange(s,s+w.length)}
  else if(k==='u'){if(s===e){s=ls0;e=le}const w=v.slice(s,e).toLocaleUpperCase('vi');t.value=v.slice(0,s)+w+v.slice(e);t.setSelectionRange(s,s+w.length)}
- t.focus();aboutSave()}
+ t.focus();edSave(id)}
 function mgrHTML(){const rows=[`<div class="mhd"><span>Địa điểm / di tích</span><span>Link thông tin</span><span>Link ảnh</span></div>`];
  const cell=(o,key)=>`<div class="mc"><input type="url" data-key="${key}" placeholder="https://…" aria-label="Link thông tin: ${esc(o.n||o.name)}" value="${esc(getLink(o,key))}"><span class="st" data-st="${key}"></span></div><div class="mc"><div class="ifld"><input type="url" data-ikey="${key}" placeholder="Dán link ảnh hoặc nhấn Ctrl+V để dán ảnh" aria-label="Link ảnh: ${esc(o.n||o.name)}" value="${esc(/^data:/.test(imgStore[key]||'')?'':(imgStore[key]||IMGS[key]||''))}"><label class="btn ghost sm fbtn" title="Chọn ảnh từ máy">Chọn file<input type="file" accept="image/*" data-ifile="${key}" hidden></label><button type="button" class="btn ghost sm" data-idel="${key}" title="Xóa ảnh này" hidden>✕</button></div><span class="st" data-ist="${key}"></span></div>`;
  for(const s of SITES){rows.push(`<section class="mgs" id="mg-${s.id}" data-n="${esc(norm(s.name+' '+s.city))}"><button type="button" class="sh" data-mgt="${s.id}" aria-expanded="true">${esc(s.name)}<i>${s.spots.length+1} ô · bấm để thu gọn</i></button>`);
@@ -1085,7 +1084,7 @@ function mgrBind(){mgrNav();const stat=k=>{const e=document.querySelector(`[data
   i.onchange=()=>{const v=i.value.trim();if(!v)delete store[k];else{const u=safeUrl(/^https?:\/\//i.test(v)?v:'https://'+v);if(!u){toast('Link không hợp lệ: '+v);i.value=getLink(ownerOf(k)[0],k);return}store[k]=u}persist();i.value=getLink(ownerOf(k)[0],k);stat(k)}});
  $('mCopy').onclick=()=>{const out=Object.keys(store).filter(k=>store[k]).map(k=>` ${JSON.stringify(k)}:${JSON.stringify(store[k])},`);const txt='const LINKS={\n'+Object.keys(LINKS).map(k=>` ${JSON.stringify(k)}:${JSON.stringify(LINKS[k])},`).filter(l=>!out.some(o=>o.startsWith(l.split(':')[0]+':'))).concat(out).join('\n')+'\n};';
   copyText(txt,'Đã sao chép khối LINKS')};
- $('mClear').onclick=()=>{store={};persist();renderTech();toast('Đã xóa link đã nhập')}}
+ $('mClear').onclick=()=>{store={};persist();renderLinks();toast('Đã xóa link đã nhập')}}
 function copyText(txt,okMsg){const fb=()=>{const ta=document.createElement('textarea');ta.value=txt;ta.style.cssText='position:fixed;opacity:0';document.body.appendChild(ta);ta.select();let ok=false;try{ok=document.execCommand('copy')}catch(e){}ta.remove();if(ok)toast(okMsg);else showText(txt)};
  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(txt).then(()=>toast(okMsg),fb);else fb()}
 /* khi trình duyệt không cho sao chép tự động: hiện nội dung trong ô chọn sẵn để người dùng tự sao chép */
@@ -1112,7 +1111,7 @@ function imgMgrBind(){const stat=k=>{const e=document.querySelector(`[data-ist="
   try{if(!navigator.clipboard||!navigator.clipboard.read)return fail();const items=await navigator.clipboard.read();for(const it of items){const t=it.types.find(x=>/^image\//.test(x));if(t){saveImgFile(k,new File([await it.getType(t)],'dan.'+t.split('/')[1],{type:t}));return}}toast('Chưa có ảnh nào được sao chép. Hãy chuột phải vào ảnh → Sao chép hình ảnh, rồi dán lại.')}catch(e){fail()}});
  document.querySelectorAll('#mgr [data-idel]').forEach(b=>b.onclick=()=>{const k=b.dataset.idel;delete imgStore[k];persistImgs();const i=document.querySelector(`[data-ikey="${k}"]`);if(i)i.value=IMGS[k]||'';stat(k)});
  $('iCopy').onclick=()=>{const all=Object.assign({},IMGS,imgStore);const big=Object.keys(all).filter(k=>/^data:/.test(all[k]));big.forEach(k=>delete all[k]);if(big.length)toast('Ảnh chọn từ máy ('+big.length+') không nằm trong khối IMGS; chúng chỉ lưu trên trình duyệt này.');copyText('const IMGS={\n'+Object.keys(all).filter(k=>all[k]).map(k=>` ${JSON.stringify(k)}:${JSON.stringify(all[k])},`).join('\n')+'\n};','Đã sao chép khối IMGS')};
- $('iClear').onclick=()=>{imgStore={};persistImgs();renderTech();toast('Đã xóa ảnh đã nhập')}}
+ $('iClear').onclick=()=>{imgStore={};persistImgs();renderLinks();toast('Đã xóa ảnh đã nhập')}}
 /* ===== ẢNH THẬT: tự tìm trên Wikipedia / Wikimedia Commons khi trang được mở có Internet ===== */
 const IMGC=ls.json('dsvn.img.v2',{});let imgDirty=false,imgOff=0;
 const DAY=864e5;
@@ -1314,7 +1313,10 @@ function quizAct(a){
 /* ===== TRANG "Ý NGHĨA": hiển thị nội dung được điền ở trang "Liên kết" (có sẵn nội dung mẫu để chỉnh sửa) ===== */
 /* nội dung mẫu để chỉnh sửa; người biên soạn sửa trong hộp ở trang Liên kết */
 const ABOUT_TEXT_DEF="# Ý nghĩa và tiềm năng của việc ứng dụng công nghệ số vào giới thiệu danh lam thắng cảnh\n\nTrang web “Di sản Việt Nam 3D” là một thử nghiệm ứng dụng công nghệ số – mô hình 3D, bản đồ, dòng thời gian, ảnh tư liệu và câu hỏi tương tác – để đưa các di tích lịch sử, danh lam thắng cảnh của Việt Nam đến với người xem ngay trên màn hình điện thoại hoặc máy tính.\n\n# Ý nghĩa và tác dụng\n- Đi du lịch qua màn hình nhỏ: người xem có thể “đi” từ Đền Hùng đến Hạ Long, từ Huế vào Sài Gòn chỉ bằng vài lần chạm, xoay mô hình 3D và đọc thông tin mà không cần rời nhà.\n- Chi phí thấp: không tốn tiền đi lại, ăn ở, vé tham quan; chỉ cần một thiết bị có kết nối Internet. Học sinh, sinh viên có thể dùng ngay trong giờ học.\n- Tiếp cận rộng rãi: người ở vùng xa, người lớn tuổi, người khuyết tật hay người Việt ở nước ngoài đều có thể tìm hiểu di sản; thông tin xem được ở mọi thời điểm, không bị giới hạn giờ mở cửa hay mùa du lịch.\n- Giáo dục và truyền cảm hứng: kết hợp hình ảnh, mô hình, mốc thời gian và câu đố vui giúp ghi nhớ lịch sử dễ hơn, tạo hứng thú trước khi người xem tìm đến di tích thật.\n- Bảo tồn và lưu trữ: dữ liệu số giúp ghi lại hiện trạng di tích, giảm áp lực lượng khách lên những di tích mỏng manh và là nguồn tư liệu phục vụ công tác trùng tu về sau.\n\n# Tiềm năng phát triển\n- Mô hình chi tiết và sát thực tế hơn: khi có thêm nhân lực và thời gian đầu tư, các mô hình khối đơn giản hiện nay có thể được thay bằng mô hình dựng từ ảnh chụp, quét 3D laser, ảnh 360° và máy bay không người lái, tái hiện đúng kiến trúc, màu sắc, hoa văn như thật.\n- Dữ liệu đa dạng hơn: bổ sung nhiều di tích, lễ hội, hiện vật, nhân vật lịch sử cùng tư liệu ảnh – video – âm thanh; có thể tổng hợp dữ liệu theo từng tỉnh, thành phố để hình thành kho dữ liệu di sản của cả nước.\n- Trải nghiệm phong phú hơn: tích hợp thực tế ảo (VR), thực tế tăng cường (AR) ngay tại di tích, thuyết minh đa ngôn ngữ, hướng dẫn viên ảo, bản đồ GIS và lớp bản đồ cổ.\n- Hợp tác: phối hợp với bảo tàng, ban quản lý di tích, nhà trường và cộng đồng địa phương để dữ liệu được kiểm chứng và cập nhật thường xuyên.\n\n# Hạn chế hiện tại\nCác mô hình hiện chỉ mang tính minh họa, không thay thế tư liệu khoa học; thông tin được tổng hợp từ nguồn công khai (Wikipedia, UNESCO, báo chí) nên cần đối chiếu khi dùng cho mục đích học thuật. Trải nghiệm trực tuyến cũng không thể thay thế hoàn toàn cảm nhận khi đến tận nơi.\n\n# Kết luận\nỨng dụng công nghệ số không thay thế việc đến thăm di tích, mà là chiếc cầu nối giúp nhiều người biết đến, yêu mến và có ý thức gìn giữ di sản hơn.";
-let aboutText=(()=>{const v=ls.get('dsvn.aboutc',null);return v===null?ABOUT_TEXT_DEF:v})();
+const TECH_TEXT_DEF="# Công nghệ số trong trang web này\nNhững công nghệ đã được áp dụng để người xem tiếp cận di tích mà không cần có mặt tại chỗ.\n\n- Mô hình 3D tương tác của 15 địa điểm: xoay – zoom (cả cảm ứng hai ngón), các số kèm tên gắn trên từng di tích nhỏ bám mượt theo góc nhìn.\n- Mục “Nội dung” (lịch sử sơ bộ, mốc thời gian) và “Xem thêm” (liên kết Wikipedia, UNESCO, báo chí) cho từng địa điểm.\n- Ảnh thật của di tích, tự lấy từ Wikipedia / Wikimedia Commons khi có kết nối Internet, hoặc ảnh do người biên soạn thêm; luôn kèm nguồn nếu lấy từ Wikipedia.\n- Trang “Đố vui”: câu hỏi dựa trên nội dung đã xem, có giải thích và liên kết quay lại nơi chứa đáp án.\n- Bản đồ đơn giản của Việt Nam (gom cụm), dòng thời gian theo thời kỳ, giao diện sáng / tối.\n- Chế độ tham quan tự động đi lần lượt qua từng điểm.\n- Trang “Liên kết” để người biên soạn tự điền link thông tin, ảnh và nội dung trang “Ý nghĩa”, lưu ngay trên trình duyệt.";
+/* hai trang có nội dung sửa được ở trang Liên kết: ý nghĩa và công nghệ số (lưu trong trình duyệt) */
+const CT={about:{key:'dsvn.aboutc',def:ABOUT_TEXT_DEF,bid:'aBody',pid:'aPrev',sid:'aSt'},tech:{key:'dsvn.techc',def:TECH_TEXT_DEF,bid:'tBody',pid:'tPrev',sid:'tSt'}};
+for(const k in CT){const v=ls.get(CT[k].key,null);CT[k].val=v===null?CT[k].def:v}
 const inl=s=>esc(s).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');
 /* cú pháp: "# " đầu mục (in đậm, in hoa) · "- " gạch đầu dòng · **chữ** in đậm · dòng trống ngăn đoạn */
 function aboutHTML(t){const out=[];let ul=null;const flush=()=>{if(ul){out.push('<ul>'+ul.map(x=>`<li>${inl(x)}</li>`).join('')+'</ul>');ul=null}};
@@ -1322,8 +1324,9 @@ function aboutHTML(t){const out=[];let ul=null;const flush=()=>{if(ul){out.push(
   if(m=line.match(/^\s*#+\s+(.*)/)){flush();out.push(`<h2 class="sec ah">${esc(m[1])}</h2>`)}
   else if(m=line.match(/^\s*[-•*]\s+(.*)/))(ul||(ul=[])).push(m[1]);
   else{flush();if(line.trim())out.push(`<p>${inl(line)}</p>`)}});flush();return out.join('')}
-function renderAbout(){
- $('view').innerHTML=`<div class="wrap about"><div class="eyebrow">Ý nghĩa · Tiềm năng</div><div class="abody">${aboutHTML(aboutText)}</div></div>`}
+const contentPage=(k,eyebrow)=>{$('view').innerHTML=`<div class="wrap about"><div class="eyebrow">${eyebrow}</div><div class="abody">${aboutHTML(CT[k].val)}</div></div>`};
+function renderAbout(){contentPage('about','Ý nghĩa · Tiềm năng')}
+function renderTech(){contentPage('tech','Công nghệ số')}
 /* --- sự kiện chung --- */
 document.querySelectorAll('nav button[data-v]').forEach(b=>b.onclick=()=>show(b.dataset.v));
 if(!EDIT)$('navLinks').style.display='none';
@@ -1351,12 +1354,12 @@ $('view').onclick=e=>{const b=e.target.closest('[data-site],[data-go],[data-fk],
  else if(d.k!==undefined&&b.classList.contains('opt'))answer(+d.k);
  else if(d.jump)show(d.jump);
  else if(d.jumpc){show(d.jumpc);openModal(byId[d.jumpc],'n')}
- else if(d.fmt)aboutFmt(d.fmt);
+ else if(d.fmt)edFmt(d.fmt,d.ed);
  else if(d.eid!==undefined){const el=$('view').querySelector(`.era[data-eid="${d.eid}"]`);if(el)$('view').scrollTo({top:Math.max(0,el.getBoundingClientRect().top-$('view').getBoundingClientRect().top+$('view').scrollTop-100),behavior:RM?'auto':'smooth'})}
  else if(d.fk==='mapclear'){mapSel=-1;drawMap();mapList()}
  else if(d.fk){const k=d.fk;if(k==='un')F.un=!F.un;else F[k]=d.fv;
   document.querySelectorAll('.chip[data-fk]').forEach(c=>c.classList.toggle('on',c.dataset.fk==='un'?F.un:F[c.dataset.fk]===c.dataset.fv));grid()}};
-$('view').addEventListener('input',e=>{if(e.target.id==='aBody'){clearTimeout(aboutSave.t);aboutSave.t=setTimeout(aboutSave,350)}});
+$('view').addEventListener('input',e=>{const k=e.target.dataset&&e.target.dataset.ed;if(k&&CT[k]&&e.target.tagName==='TEXTAREA'){clearTimeout(edSave.t);edSave.t=setTimeout(()=>edSave(k),350)}});
 /* hộp thoại Nội dung / Xem thêm + phóng to ảnh */
 $('mX').onclick=()=>closeModal();
 $('modal').onclick=e=>{if(e.target===$('modal')){closeModal();return}
