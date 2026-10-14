@@ -9,19 +9,19 @@ Toàn bộ nằm trong **một file** `index.html`; mở trực tiếp bằng tr
 |---|---|
 | Địa điểm · Bản đồ · Dòng thời gian | Chọn nơi cần xem theo danh sách, vị trí, hoặc mốc thời gian |
 | Tham quan 3D | Xoay / zoom mô hình, bấm số trên mô hình để xem từng di tích nhỏ; nút **Nội dung** (lịch sử sơ bộ, mốc thời gian) và **Xem thêm** (liên kết Wikipedia, UNESCO, báo chí) |
-| Thử thách | Đố vui 66 câu, có chế độ “ôn lại những gì đã xem”, giải thích đáp án và liên kết quay lại nơi chứa đáp án |
-| Ý nghĩa | Trang nội dung **sửa được**: bấm biểu tượng bút chì mờ ở góc phải để sửa, biểu tượng lưu (hoặc Ctrl+S) để lưu vào trình duyệt |
-| Công nghệ số | Các công nghệ đã dùng, hướng nâng cấp, bảng quản lý liên kết |
+| Đố vui | Đố vui 66 câu, có chế độ “ôn lại những gì đã xem”, giải thích đáp án và liên kết quay lại nơi chứa đáp án |
+| Ý nghĩa | Hiển thị nội dung người biên soạn điền ở trang **Liên kết** (để trống cho tới khi có nội dung) |
+| Công nghệ số | Các công nghệ đã áp dụng trong trang web |
+| Liên kết | Hộp nội dung cho trang Ý nghĩa (có nút ĐẦU MỤC, In đậm, IN HOA, gạch đầu dòng; lưu tự động) và bảng điền link thông tin + ảnh cho từng di tích |
 
 ## Chỉnh sửa dữ liệu (trong `index.html`)
 
 * `SITES` – địa điểm và các điểm nhỏ (`spots`): tên, mô tả, mốc năm, vị trí máy quay, `link`.
 * `INFO` – phần **Nội dung** (`p`, `tl`, `v`), danh sách **Xem thêm** (`more`), tên bài Wikipedia để lấy ảnh (`wp`, `sp`).
 * `QUIZ` – câu hỏi: `[địa điểm, số thứ tự điểm nhỏ (-1: phần Nội dung), câu hỏi, 4 đáp án, vị trí đáp án đúng (0–3), giải thích]`.
-* `ABOUT_DEF` – nội dung mặc định của trang Ý nghĩa.
-* `LINKS` – link điền thêm (khóa `id-địa-điểm` hoặc `id-địa-điểm.số-điểm`); trang Công nghệ số có nút sao chép sẵn khối này.
-* `IMGS` – ảnh điền tay (trang Công nghệ số cũng cho chọn file ảnh từ máy, lưu trong trình duyệt) (ưu tiên hơn ảnh tự tìm), ví dụ `'den-hung.2':'https://…/anh.jpg'`.
-* `EDIT` – đặt `false` khi đưa cho người xem để ẩn ô nhập link và bảng quản lý.
+* `LINKS` – link điền thêm (khóa `id-địa-điểm` hoặc `id-địa-điểm.số-điểm`); trang Liên kết có nút sao chép sẵn khối này.
+* `IMGS` – ảnh điền tay (trang Liên kết cũng cho chọn file ảnh từ máy, lưu trong trình duyệt) (ưu tiên hơn ảnh tự tìm), ví dụ `'den-hung.2':'https://…/anh.jpg'`.
+* `EDIT` – đặt `false` khi đưa cho người xem để ẩn ô nhập link, bảng quản lý và mục Liên kết.
 
 ## Ảnh thật
 
