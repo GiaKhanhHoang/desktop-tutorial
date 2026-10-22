@@ -174,6 +174,7 @@ figure.ph figcaption{font-size:10px;line-height:1.5;color:var(--dim);padding:5px
 .aprev{border:1px dashed var(--line2);padding:14px 18px;min-height:40px}
 .blk{max-width:1000px;border:1px solid var(--line);background:var(--glass);margin:12px 0}.blk>summary{cursor:pointer;list-style:none;padding:15px 18px;font:600 19px "Noto Serif","Be Vietnam Pro",serif;color:var(--tx);display:flex;align-items:center;gap:10px}.blk>summary::-webkit-details-marker{display:none}.blk>summary::before{content:"▸";color:var(--gold);font-size:15px;transition:transform .2s}.blk[open]>summary::before{transform:rotate(90deg)}.blk[open]>summary{border-bottom:1px solid var(--line)}.blk>summary small{font:500 12px "Be Vietnam Pro",sans-serif;color:var(--dim);margin-left:4px}.blk>summary:hover{background:var(--glass2)}.blk .bb{padding:10px 18px 20px}.blk .mgr{max-width:none}
 .exp{margin-top:18px;padding-top:14px;border-top:1px dashed var(--line2)}.exp .hp{margin:8px 0 4px}
+.mc textarea.tx{width:100%;min-height:84px;resize:vertical;background:var(--field);border:1px solid var(--line2);color:var(--tx);padding:6px 8px;font:12px/1.55 "Be Vietnam Pro",sans-serif}
 </style></head><body>
 <div id="scene"></div>
 <header><div class="brand"><div class="seal">遺</div><span>Di sản Việt Nam · 3D</span></div>
@@ -206,6 +207,9 @@ const LINKS={
 };
 /* Ảnh điền tay (ghi đè ảnh tự tìm từ Wikipedia). Khóa như trên, giá trị là địa chỉ ảnh: 'den-hung.2':'https://…/anh.jpg'.
    Nên dùng ảnh được phép sử dụng tự do (ví dụ ảnh trên Wikimedia Commons) và ghi rõ nguồn. */
+/* Nội dung mô tả của từng di tích nhỏ (ghi đè mô tả mặc định). Khóa dạng 'id-địa-điểm.số' (số bắt đầu từ 0). Sửa ở trang Liên kết rồi dùng nút "Tải bản index.html…" để ghi vào đây. */
+const TEXTS={
+};
 const IMGS={
  "cu-chi":"https://upload.wikimedia.org/wikipedia/commons/5/5b/%C4%90%E1%BB%8Ba_%C4%91%E1%BA%A1o_C%E1%BB%A7_Chi.jpg",
  "hoa-lu.2":"https://upload.wikimedia.org/wikipedia/commons/6/6b/%C4%90%E1%BB%81n_L%C3%AA_%C4%90%E1%BA%A1i_H%C3%A0nh%2C_ch%C3%ADnh_%C4%91%E1%BA%A1o.JPG",
@@ -938,6 +942,11 @@ function adapt(dt){if(performance.now()<warm||document.hidden)return;fT+=dt;fN++
 /* ===== LIÊN KẾT: dữ liệu trong code + link người dùng dán (lưu trên trình duyệt này) ===== */
 let store=ls.json('dsvn.links',{});if(!store||typeof store!=='object'||Array.isArray(store))store={};
 const persist=()=>ls.set('dsvn.links',JSON.stringify(store));
+/* nội dung mô tả từng di tích nhỏ: sửa ở trang Liên kết (lưu trên trình duyệt), có thể ghi cố định vào TEXTS */
+let tstore=ls.json('dsvn.txt',{});if(!tstore||typeof tstore!=='object'||Array.isArray(tstore))tstore={};
+SITES.forEach(s=>s.spots.forEach(p=>{p.t0=p.t}));
+const applyTexts=()=>SITES.forEach(s=>s.spots.forEach(p=>{p.t=tstore[p.k]||TEXTS[p.k]||p.t0}));applyTexts();
+const persistTx=()=>ls.set('dsvn.txt',JSON.stringify(tstore));
 const safeUrl=u=>{try{const x=new URL(String(u).trim());return /^https?:$/.test(x.protocol)?x.href:''}catch(e){return ''}};
 const getLink=(o,key)=>safeUrl(store[key]||LINKS[key]||o.link||'');
 const linkSrc=(o,key)=>store[key]?'đã nhập':(LINKS[key]||o.link)?'có sẵn':'trống';
@@ -1069,11 +1078,13 @@ function edFmt(k,id){const c=CT[id],t=c&&$(c.bid);if(!t)return;
  else if(k==='b'){if(s===e){toast('Hãy chọn đoạn chữ cần in đậm trước.');return}const sel=v.slice(s,e),w=/^\*\*[\s\S]*\*\*$/.test(sel)?sel.slice(2,-2):'**'+sel+'**';t.value=v.slice(0,s)+w+v.slice(e);t.setSelectionRange(s,s+w.length)}
  else if(k==='u'){if(s===e){s=ls0;e=le}const w=v.slice(s,e).toLocaleUpperCase('vi');t.value=v.slice(0,s)+w+v.slice(e);t.setSelectionRange(s,s+w.length)}
  t.focus();edSave(id)}
-function mgrHTML(){const rows=[`<div class="mhd"><span>Địa điểm / di tích</span><span>Link thông tin</span><span>Link ảnh</span></div>`];
- const cell=(o,key)=>`<div class="mc"><input type="url" data-key="${key}" placeholder="https://…" aria-label="Link thông tin: ${esc(o.n||o.name)}" value="${esc(getLink(o,key))}"><span class="st" data-st="${key}"></span></div><div class="mc"><div class="ifld"><input type="url" data-ikey="${key}" placeholder="Dán link ảnh hoặc nhấn Ctrl+V để dán ảnh" aria-label="Link ảnh: ${esc(o.n||o.name)}" value="${esc(/^data:/.test(imgStore[key]||'')?'':(imgStore[key]||IMGS[key]||''))}"><label class="btn ghost sm fbtn" title="Chọn ảnh từ máy">Chọn file<input type="file" accept="image/*" data-ifile="${key}" hidden></label><button type="button" class="btn ghost sm" data-idel="${key}" title="Xóa ảnh này" hidden>✕</button></div><span class="st" data-ist="${key}"></span></div>`;
+function mgrHTML(){const rows=[`<div class="mhd"><span>Địa điểm / di tích</span><span>Link thông tin (cả địa danh) / Nội dung (di tích nhỏ)</span><span>Link ảnh</span></div>`];
+ const imgc=(o,key)=>`<div class="mc"><div class="ifld"><input type="url" data-ikey="${key}" placeholder="Dán link ảnh hoặc nhấn Ctrl+V để dán ảnh" aria-label="Link ảnh: ${esc(o.n||o.name)}" value="${esc(/^data:/.test(imgStore[key]||'')?'':(imgStore[key]||IMGS[key]||''))}"><label class="btn ghost sm fbtn" title="Chọn ảnh từ máy">Chọn file<input type="file" accept="image/*" data-ifile="${key}" hidden></label><button type="button" class="btn ghost sm" data-idel="${key}" title="Xóa ảnh này" hidden>✕</button></div><span class="st" data-ist="${key}"></span></div>`;
+ const cell=(o,key)=>`<div class="mc"><input type="url" data-key="${key}" placeholder="https://…" aria-label="Link thông tin: ${esc(o.n||o.name)}" value="${esc(getLink(o,key))}"><span class="st" data-st="${key}"></span></div>${imgc(o,key)}`;
+ const tcell=(o,key)=>`<div class="mc"><textarea class="tx" data-tkey="${key}" aria-label="Nội dung: ${esc(o.n)}" placeholder="Nội dung mô tả di tích">${esc(o.t)}</textarea><span class="st" data-tst="${key}">${tstore[key]?'đã sửa':''}</span></div>${imgc(o,key)}`;
  for(const s of SITES){rows.push(`<section class="mgs${OPENALL?'':' shut'}" id="mg-${s.id}" data-n="${esc(norm(s.name+' '+s.city))}"><button type="button" class="sh" data-mgt="${s.id}" aria-expanded="${OPENALL}">${esc(s.name)}<i>${s.spots.length+1} ô · bấm để ${OPENALL?'thu gọn':'mở'}</i></button>`);
   rows.push(`<div class="mrow3" data-n="${esc(norm('giới thiệu chung'))}"><span>Giới thiệu chung</span>${cell(s,s.id)}</div>`);
-  s.spots.forEach((p,j)=>rows.push(`<div class="mrow3 sp" data-n="${esc(norm(p.n))}"><span>${j+1}. ${esc(p.n)}</span>${cell(p,s.id+'.'+j)}</div>`));rows.push('</section>')}
+  s.spots.forEach((p,j)=>rows.push(`<div class="mrow3 sp" data-n="${esc(norm(p.n))}"><span>${j+1}. ${esc(p.n)}</span>${tcell(p,s.id+'.'+j)}</div>`));rows.push('</section>')}
  return `<div class="mfind"><input type="search" id="mQ" placeholder="Tìm nhanh địa điểm hoặc di tích, ví dụ: hầm đờ cát, chùa cầu…" aria-label="Tìm trong bảng liên kết và ảnh" autocomplete="off"><div class="mchips">${SITES.map(s=>`<button type="button" class="chip" data-mgj="${s.id}">${esc(s.name.replace(/^(Khu di tích|Thánh địa|Quần thể|Phố cổ|Chiến trường|Cố đô|Thành|Vịnh|Hoàng thành) /,'').replace(/^./,c=>c.toUpperCase()))}</button>`).join('')}</div><span class="note" id="mCnt"></span></div>
  <div class="mgr" id="mgr">${rows.join('')}</div><div class="row"><button class="btn" type="button" id="mCopy">Sao chép khối LINKS</button><button class="btn" type="button" id="iCopy">Sao chép khối IMGS</button><button class="btn ghost" type="button" id="mClear">Xóa link đã nhập</button><button class="btn ghost" type="button" id="iClear">Xóa ảnh đã nhập</button></div>
  <div class="exp"><button class="btn" type="button" id="exBtn">Tải bản index.html có sẵn ảnh &amp; nội dung của tôi</button><p class="hp">Tạo một file index.html đã gắn sẵn mọi ảnh (kể cả ảnh chọn từ máy), link và nội dung bạn đã điền, rồi tải về. Đưa file này lên GitHub thay cho file cũ là ai mở link cũng thấy. Chỉ dùng được khi mở trang từ link GitHub Pages (hoặc máy chủ), không dùng được trên bản xem trước claude.ai.</p><span class="st" id="exSt"></span></div>`}
@@ -1087,7 +1098,10 @@ function mgrNav(){const q=$('mQ');if(!q)return;
  q.oninput=apply;
  $('mgr').addEventListener('click',e=>{const b=e.target.closest('[data-mgt]');if(!b)return;const sec=b.parentNode,shut=sec.classList.toggle('shut');b.setAttribute('aria-expanded',!shut);b.querySelector('i').textContent=shut?'bấm để mở':'bấm để thu gọn'});
  document.querySelectorAll('[data-mgj]').forEach(b=>b.onclick=()=>{q.value='';apply();openBlk('mgr');const sec=$('mg-'+b.dataset.mgj);sec.classList.remove('shut');const h=sec.querySelector('.sh');h.setAttribute('aria-expanded','true');h.querySelector('i').textContent='bấm để thu gọn';const v=$('view');v.scrollTo({top:sec.getBoundingClientRect().top-v.getBoundingClientRect().top+v.scrollTop-130,behavior:RM?'auto':'smooth'});const f=sec.querySelector('input');if(f)f.focus({preventScroll:true})})}
-function mgrBind(){mgrNav();const stat=k=>{const e=document.querySelector(`[data-st="${k}"]`);if(!e)return;const [o]=ownerOf(k);const t=linkSrc(o,k);e.textContent=t;e.className='st'+(t==='đã nhập'?' on':'')};
+function mgrBind(){mgrNav();
+ document.querySelectorAll('#mgr textarea[data-tkey]').forEach(t=>{const k=t.dataset.tkey,base=()=>TEXTS[k]||(()=>{const[id,n]=k.split('.');return byId[id].spots[+n].t0})();let tm=0;
+  const fit=()=>{t.style.height='auto';t.style.height=Math.min(260,t.scrollHeight+2)+'px'};fit();
+  t.oninput=()=>{fit();clearTimeout(tm);tm=setTimeout(()=>{const v=t.value.trim(),st=document.querySelector(`[data-tst="${k}"]`);if(!v||v===base())delete tstore[k];else tstore[k]=t.value.trim();const ok=persistTx();applyTexts();if(st)st.textContent=!ok?'không lưu được (bộ nhớ đầy)':tstore[k]?'đã sửa':''},300)}});const stat=k=>{const e=document.querySelector(`[data-st="${k}"]`);if(!e)return;const [o]=ownerOf(k);const t=linkSrc(o,k);e.textContent=t;e.className='st'+(t==='đã nhập'?' on':'')};
  const ownerOf=k=>{const[id,n]=k.split('.');const s=byId[id];return [n===undefined?s:s.spots[+n]]};
  document.querySelectorAll('#mgr input[data-key]').forEach(i=>{const k=i.dataset.key;stat(k);
   i.onchange=()=>{const v=i.value.trim();if(!v)delete store[k];else{const u=safeUrl(/^https?:\/\//i.test(v)?v:'https://'+v);if(!u){toast('Link không hợp lệ: '+v);i.value=getLink(ownerOf(k)[0],k);return}store[k]=u}persist();i.value=getLink(ownerOf(k)[0],k);stat(k)}});
@@ -1132,6 +1146,7 @@ async function exportSite(){const st=$('exSt'),say=t=>{if(st)st.textContent=t};
   const swap=(re,val,name)=>{if(!re.test(s))throw new Error('không tìm thấy '+name);s=s.replace(re,()=>val)};
   swap(/const IMGS=\{[\s\S]*?\n\};/,'const IMGS={\n'+obj(merge(IMGS,imgStore))+'\n};','IMGS');
   swap(/const LINKS=\{[\s\S]*?\n\};/,'const LINKS={\n'+obj(merge(LINKS,store))+'\n};','LINKS');
+  swap(/const TEXTS=\{[\s\S]*?\n\};/,'const TEXTS={\n'+obj(merge(TEXTS,tstore))+'\n};','TEXTS');
   swap(/const ABOUT_TEXT_DEF="(?:[^"\\]|\\.)*";/,'const ABOUT_TEXT_DEF='+JSON.stringify(CT.about.val)+';','ABOUT');
   swap(/const TECH_TEXT_DEF="(?:[^"\\]|\\.)*";/,'const TECH_TEXT_DEF='+JSON.stringify(CT.tech.val)+';','TECH');
   const blob=new Blob([s],{type:'text/html;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='index.html';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);
@@ -1255,7 +1270,7 @@ function refreshSeen(){if(!sel)return;const n=seenCount(sel),t=sel.spots.length;
  document.querySelectorAll('#spots .loc[data-j]').forEach(b=>b.classList.toggle('seen',!!seen[sel.id+'.'+b.dataset.j]));
  pinList.forEach((b,i)=>b.classList.toggle('seen',!!seen[sel.id+'.'+i]))}
 /* chỉ hiện nút khi địa điểm có link; chưa có link thì không hiện gì (link nhập ở trang Công nghệ số) */
-function linkBox(o,key,host){const u=getLink(o,key);host.innerHTML=u?`<a class="btn" href="${esc(u)}" target="_blank" rel="noopener noreferrer">Mở trang giới thiệu ↗</a>`:''}
+function linkBox(o,key,host){const u=String(key).includes('.')?'':getLink(o,key);host.innerHTML=u?`<a class="btn" href="${esc(u)}" target="_blank" rel="noopener noreferrer">Mở trang giới thiệu ↗</a>`:''}
 let curPanel=null;
 function paintPanel(){$('pPh').innerHTML=curPanel?photoHTML(curPanel.o,curPanel.key,curPanel.t):''}
 function syncHud(){$('hud').classList.toggle('spot',spotIdx>=0&&!$('panel').classList.contains('hide'))}

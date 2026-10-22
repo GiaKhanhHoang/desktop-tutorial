@@ -20,6 +20,7 @@ Toàn bộ nằm trong **một file** `index.html`; mở trực tiếp bằng tr
 * `INFO` – phần **Nội dung** (`p`, `tl`, `v`), danh sách **Xem thêm** (`more`), tên bài Wikipedia để lấy ảnh (`wp`, `sp`).
 * `QUIZ` – câu hỏi: `[địa điểm, số thứ tự điểm nhỏ (-1: phần Nội dung), câu hỏi, 4 đáp án, vị trí đáp án đúng (0–3), giải thích]`.
 * `LINKS` – link điền thêm (khóa `id-địa-điểm` hoặc `id-địa-điểm.số-điểm`); trang Liên kết có nút sao chép sẵn khối này.
+* `TEXTS` – mô tả của từng di tích nhỏ (sửa ở trang Liên kết rồi dùng nút “Tải bản index.html…” để ghi vào đây).
 * `IMGS` – ảnh điền tay (trang Liên kết cũng cho chọn file ảnh từ máy, lưu trong trình duyệt) (ưu tiên hơn ảnh tự tìm), ví dụ `'den-hung.2':'https://…/anh.jpg'`.
 * `EDIT` – đặt `false` khi đưa cho người xem để ẩn ô nhập link, bảng quản lý và mục Liên kết.
 
