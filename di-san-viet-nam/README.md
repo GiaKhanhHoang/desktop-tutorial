@@ -10,9 +10,7 @@ Toàn bộ nằm trong **một file** `index.html`; mở trực tiếp bằng tr
 | Địa điểm · Bản đồ · Dòng thời gian | Chọn nơi cần xem theo danh sách, vị trí, hoặc mốc thời gian |
 | Tham quan 3D | Xoay / zoom mô hình, bấm số trên mô hình để xem từng di tích nhỏ; nút **Nội dung** (lịch sử sơ bộ, mốc thời gian) và **Xem thêm** (liên kết Wikipedia, UNESCO, báo chí) |
 | Đố vui | Đố vui 66 câu, có chế độ “ôn lại những gì đã xem”, giải thích đáp án và liên kết quay lại nơi chứa đáp án |
-| Ý nghĩa | Hiển thị nội dung trong hộp ở trang **Liên kết** (có sẵn nội dung mẫu để chỉnh sửa) |
-| Công nghệ số | Hiển thị nội dung trong hộp “Công nghệ số” ở trang **Liên kết** (có sẵn nội dung mẫu, sửa được) |
-| Liên kết | Hai hộp nội dung sửa được (Ý nghĩa, Công nghệ số; có nút ĐẦU MỤC, In đậm, IN HOA, gạch đầu dòng, Về mẫu; lưu tự động) và bảng điền link thông tin + ảnh cho từng di tích |
+| Liên kết | Bảng điền link thông tin (cả địa danh), nội dung mô tả (di tích nhỏ) và ảnh; nút tải bản index.html đã gắn sẵn những gì đã điền |
 
 ## Chỉnh sửa dữ liệu (trong `index.html`)
 
@@ -33,4 +31,4 @@ Toàn bộ nằm trong **một file** `index.html`; mở trực tiếp bằng tr
 ## Ghi chú
 
 * Mô hình 3D chỉ mang tính minh họa; thông tin được tổng hợp từ nguồn công khai, cần đối chiếu khi dùng cho mục đích học thuật.
-* Tiến độ tham quan, điểm đố vui, giao diện sáng/tối và nội dung trang Ý nghĩa được lưu trong `localStorage` của trình duyệt đang dùng.
+* Tiến độ tham quan, điểm đố vui, giao diện sáng/tối, link, ảnh và nội dung đã sửa được lưu trong `localStorage` của trình duyệt đang dùng.
